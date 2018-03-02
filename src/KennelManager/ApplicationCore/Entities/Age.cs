@@ -7,6 +7,6 @@ namespace ApplicationCore.Entities
     public class Age
     {
         public int Number { get; set; }
-        public string Unit { get; set; }
+        public string UOM { get; set; }
     }
 }
