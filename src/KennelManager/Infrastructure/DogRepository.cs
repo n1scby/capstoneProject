@@ -23,10 +23,10 @@ namespace Infrastructure
 
         private string byDogId = "WHERE DogId = @dogId";
 
-        private string selectStatusQuery = "SELECT Id, DogId, Status, StatusDate from DogStatus ";
+        private string selectStatusQuery = "SELECT Id, DogId, Status, Date from DogStatus ";
         private string updateStatusQuery = "UPDATE DogStatus SET Status = @status";
         private string deleteStatusQuery = "DELETE DogStatus";
-        private string insertStatusQuery = "Insert into DogStatus (DogId, Status, StatusDate) values(@dogId, @status, @statusDate)";
+        private string insertStatusQuery = "Insert into DogStatus (DogId, Status, Date) values(@dogId, @status, @statusDate)";
 
         private string selectColorQuery = "SELECT Id, DogId, Color from DogColor ";
         private string updateColorQuery = "UPDATE DogColor SET Color = @color";
@@ -195,18 +195,198 @@ namespace Infrastructure
 
                         };
 
+                        dog.Images = GetImagesByDogId(dog.Id);
+                        dog.Colors = GetColorsByDogId(dog.Id);
+                        dog.Statuses = GetStatusesByDogId(dog.Id);
+
+                    }
+                } 
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+            return dog;
+        }
+
+        
+
+        public List<Dog> GetDogList()
+        {
+            List<Dog> dogs = new List<Dog>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(selectDogQuery, conn);
+
+                try
+                {
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        Dog dog = new Dog()
+                        {
+                            Id = int.Parse(reader[0].ToString()),
+                            Name = reader[1].ToString(),
+                            Gender = reader[2].ToString(),
+                            //   Altered = (int.Parse(reader[3].ToString()) == 1) ? true : false,
+                            Altered = reader[3].ToString(),
+                            DogAge = new Age()
+                            {
+                                Number = int.Parse(reader[4].ToString()),
+                                UOM = reader[5].ToString()
+                            },
+                            LocationId = reader[6].ToString(),
+                            Weight = double.Parse(reader[7].ToString()),
+                            MixedBeed = (int.Parse(reader[8].ToString()) == 1) ? true : false,
+                            PrimaryBreed = reader[9].ToString(),
+                            SecondaryBreed = reader[10].ToString(),
+                            Description = reader[11].ToString()
+
+                        };
+
+                        dog.Images = GetImagesByDogId(dog.Id);
+                        dog.Colors = GetColorsByDogId(dog.Id);
+                        dog.Statuses = GetStatusesByDogId(dog.Id);
+
+                        dogs.Add(dog);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+            return dogs;
+        }
+
+
+        public List<Image> GetImagesByDogId(int dogId)
+        {
+            List<Image> images = new List<Image>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(selectImageQuery + byDogId, conn);
+                cmd.Parameters.AddWithValue("@dogId", dogId);
+
+                try
+                {
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        Image image = new Image()
+                        {
+                            Id = int.Parse(reader[0].ToString()),
+                            DogId = int.Parse(reader[1].ToString()),
+                            Name = reader[2].ToString()                                                      
+                        };
+
+                        images.Add(image);
+                       
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+            return images;
+        }
+
+
+        public List<Status> GetStatusesByDogId(int dogId)
+        {
+            List<Status> statuses = new List<Status>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(selectStatusQuery + byDogId, conn);
+                cmd.Parameters.AddWithValue("@dogId", dogId);
+
+                try
+                {
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        Status status = new Status()
+                        {
+                            Id = int.Parse(reader[0].ToString()),
+                            DogId = int.Parse(reader[1].ToString()),
+                            DogStatus = reader[2].ToString(),
+                            Date = DateTime.Parse(reader[3].ToString())
+                        };
+
+                        statuses.Add(status);
 
 
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
 
             }
+            return statuses;
         }
 
-        public List<Dog> GetDogList()
+        public List<Color> GetColorsByDogId(int dogId)
         {
-            throw new NotImplementedException();
+            List<Color> colors = new List<Color>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(selectColorQuery + byDogId, conn);
+                cmd.Parameters.AddWithValue("@dogId", dogId);
+
+                try
+                {
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        Color color = new Color()
+                        {
+                            Id = int.Parse(reader[0].ToString()),
+                            DogId = int.Parse(reader[1].ToString()),
+                            Name = reader[2].ToString()
+                        };
+
+                        colors.Add(color);
+
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+            return colors;
         }
+
+
+
+
 
         public void AddImage(Image newImage)
         {
@@ -457,10 +637,6 @@ namespace Infrastructure
 
             }
         }
-
-
-
-
 
 
     }

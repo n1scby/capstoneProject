@@ -9,9 +9,9 @@ namespace ApplicationCore.Interfaces
     {
         void Add(Breed newBreed);
         void Delete(Breed deleteBreed);
-        Dog GetBreedById(int id);
+        Breed GetBreedById(int id);
         void Edit(Breed updatedBreed);
-        List<Dog> GetBreedList();
+        List<Breed> GetBreedList();
 
     }
 }

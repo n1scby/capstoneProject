@@ -2,6 +2,7 @@
 using ApplicationCore.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace Infrastructure
@@ -22,27 +23,140 @@ namespace Infrastructure
 
         public void Add(Breed newBreed)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(insertBreedQuery, conn);
+                cmd.Parameters.AddWithValue("@breed", newBreed.Name);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
         }
+
 
         public void Delete(Breed deleteBreed)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(deleteBreedQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@id", deleteBreed.Id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
         }
 
         public void Edit(Breed updatedBreed)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(updateBreedQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@breed", updatedBreed.Name);
+                
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
         }
 
-        public Dog GetBreedById(int id)
+        public Breed GetBreedById(int id)
         {
-            throw new NotImplementedException();
+            Breed breed = new Breed();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(selectBreedQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                try
+                {
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        breed = new Breed()
+                        {
+                            Id = int.Parse(reader[0].ToString()),
+                            Name = reader[1].ToString(),
+                            
+                        };
+
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+            }
+            return breed;
+
         }
 
-        public List<Dog> GetBreedList()
+        public List<Breed> GetBreedList()
         {
-            throw new NotImplementedException();
+            List<Breed> breeds = new List<Breed>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(selectBreedQuery, conn);
+ 
+                try
+                {
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Breed breed = new Breed()
+                        {
+                            Id = int.Parse(reader[0].ToString()),
+                            Name = reader[1].ToString(),
+
+                        };
+
+                        breeds.Add(breed);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+            }
+            return breeds;
+
+
         }
     }
+    
 }
