@@ -2,6 +2,7 @@
 using ApplicationCore.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace Infrastructure
@@ -9,40 +10,458 @@ namespace Infrastructure
     public class DogRepository : IDogRepository
     {
         private string _connectionString;
-        private string selectDogQuery = "SELECT Id, Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, Description FROM Dog \n";
+        private string selectDogQuery = "SELECT Id, Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description FROM Dog \n";
         private string byId = "WHERE Id = @id";
         private string deleteDogQuery = "DELETE Dog \n";
         private string updateDogQuery = "UPDATE Dog SET Name = @name, Gender = @gender, Altered = @altered, Age = @age, AgeUOM = @ageUOM, Weight = @weight, LocationId = @locationId, MixedBreed = @mixedBreed, PrimaryBreed = @primaryBreed, SecondaryBreed = @secondaryBreed, Description = @description\n";
         private string insertDogQuery = "INSERT into Dog (Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description) values(@name, @gender, @altered, @age, @ageUOM, @weight, @locationId, @mixedBreed, @primaryBreed, @secondaryBreed, @description)";
+
         private string selectImageQuery = "SELECT Id, DogId, Image from DogImage ";
-        private string byDogId = "WHERE DogId = @dogId";
         private string updateImageQuery = "UPDATE DogImage SET Image = @image";
         private string deleteImageQuery = "DELETE DogImage";
         private string insertImageQuery = "Insert into DogImage (DogId, Image) values(@dogId, @image)";
 
+        private string byDogId = "WHERE DogId = @dogId";
+
+        private string selectStatusQuery = "SELECT Id, DogId, Status, StatusDate from DogStatus ";
+        private string updateStatusQuery = "UPDATE DogStatus SET Status = @status";
+        private string deleteStatusQuery = "DELETE DogStatus";
+        private string insertStatusQuery = "Insert into DogStatus (DogId, Status, StatusDate) values(@dogId, @status, @statusDate)";
+
+        private string selectColorQuery = "SELECT Id, DogId, Color from DogColor ";
+        private string updateColorQuery = "UPDATE DogColor SET Color = @color";
+        private string deleteColorQuery = "DELETE DogColor";
+        private string insertColorQuery = "Insert into DogColor (DogId, Color) values(@dogId, @color)";
+
+        public DogRepository(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
+
         public void Add(Dog newDog)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(insertDogQuery, conn);
+                cmd.Parameters.AddWithValue("@name", newDog.Name);
+                cmd.Parameters.AddWithValue("@gender", newDog.Gender);
+                cmd.Parameters.AddWithValue("@altered", newDog.Altered);
+                cmd.Parameters.AddWithValue("@age", newDog.DogAge.Number);
+                cmd.Parameters.AddWithValue("@ageUOM", newDog.DogAge.UOM);
+                cmd.Parameters.AddWithValue("@locationId", newDog.LocationId ?? "");
+                cmd.Parameters.AddWithValue("@weight", newDog.Weight);
+                cmd.Parameters.AddWithValue("@mixedBreed", newDog.MixedBeed);
+                cmd.Parameters.AddWithValue("@primaryBreed", newDog.PrimaryBreed);
+                cmd.Parameters.AddWithValue("@secondarBreed", newDog.SecondaryBreed);
+                cmd.Parameters.AddWithValue("@description", newDog.Description ?? "");
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+
+            // add colors
+            foreach (Color clr in newDog.Colors)
+            {
+                AddColor(clr);
+            }
+
+            //add status
+            foreach (Status sts in newDog.Statuses)
+            {
+                AddStatus(sts);
+            }
+
+            // add images
+            foreach (Image img in newDog.Images)
+            {
+                AddImage(img);
+            }
+
         }
 
         public void Delete(Dog deleteDog)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(deleteDogQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@id", deleteDog.Id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw ex;
+                }
+            }
         }
+
 
         public void Edit(Dog updatedDog)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(updateDogQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@name", updatedDog.Name);
+                cmd.Parameters.AddWithValue("@gender", updatedDog.Gender);
+                cmd.Parameters.AddWithValue("@altered", updatedDog.Altered);
+                cmd.Parameters.AddWithValue("@age", updatedDog.DogAge.Number);
+                cmd.Parameters.AddWithValue("@ageUOM", updatedDog.DogAge.UOM);
+                cmd.Parameters.AddWithValue("@locationId", updatedDog.LocationId ?? "");
+                cmd.Parameters.AddWithValue("@weight", updatedDog.Weight);
+                cmd.Parameters.AddWithValue("@mixedBreed", updatedDog.MixedBeed);
+                cmd.Parameters.AddWithValue("@primaryBreed", updatedDog.PrimaryBreed);
+                cmd.Parameters.AddWithValue("@secondarBreed", updatedDog.SecondaryBreed);
+                cmd.Parameters.AddWithValue("@description", updatedDog.Description ?? "");
+                cmd.Parameters.AddWithValue("@id", updatedDog.Id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+
+            foreach(Color clr in updatedDog.Colors)
+            {
+                UpdateColor(clr);
+            }
+
+            foreach (Status sts in updatedDog.Statuses)
+            {
+                UpdateStatus(sts);
+            }
+
+            foreach (Image img in updatedDog.Images)
+            {
+                UpdateImage(img);
+            }
+
         }
 
         public Dog GetDogById(int id)
         {
-            throw new NotImplementedException();
+            Dog dog = new Dog();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(selectDogQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                try
+                {
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        dog = new Dog()
+                        {
+                            Id = int.Parse(reader[0].ToString()),
+                            Name = reader[1].ToString(),
+                            Gender = reader[2].ToString(),
+                            //   Altered = (int.Parse(reader[3].ToString()) == 1) ? true : false,
+                            Altered = reader[3].ToString(),
+                            DogAge = new Age()
+                            {
+                                Number = int.Parse(reader[4].ToString()),
+                                UOM = reader[5].ToString()
+                            },
+                            LocationId = reader[6].ToString(),
+                            Weight = double.Parse(reader[7].ToString()),
+                            MixedBeed = (int.Parse(reader[8].ToString()) == 1) ? true : false,
+                            PrimaryBreed = reader[9].ToString(),
+                            SecondaryBreed = reader[10].ToString(),
+                            Description = reader[11].ToString()
+
+                        };
+
+
+
+                    }
+                }
+
+            }
         }
 
         public List<Dog> GetDogList()
         {
             throw new NotImplementedException();
         }
+
+        public void AddImage(Image newImage)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                               
+                    SqlCommand cmd = new SqlCommand(insertImageQuery, conn);
+                    cmd.Parameters.AddWithValue("@dogId", newImage.DogId);
+                    cmd.Parameters.AddWithValue("@image", newImage.Name);
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        throw;
+                    }
+                
+            }
+        }
+
+        public void AddStatus(Status newStatus)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                
+                    SqlCommand cmd = new SqlCommand(insertStatusQuery, conn);
+                    cmd.Parameters.AddWithValue("@dogId", newStatus.DogId);
+                    cmd.Parameters.AddWithValue("@status", newStatus.DogStatus);
+                    cmd.Parameters.AddWithValue("@date", newStatus.Date);
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        throw;
+                    }
+                
+            }
+        }
+
+        public void AddColor(Color newColor)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                    SqlCommand cmd = new SqlCommand(insertColorQuery, conn);
+                    cmd.Parameters.AddWithValue("@dogId", newColor.DogId);
+                    cmd.Parameters.AddWithValue("@color", newColor.Name);
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        throw;
+                    }
+                
+            }
+        }
+
+
+        public void UpdateImage(Image updateImage)
+        {
+            if (updateImage.Id == 0)
+            {
+                AddImage(updateImage);
+                return;
+            }
+
+            if (updateImage.Name == "")
+            {
+                DeleteImage(updateImage.Id);
+                return;
+            }
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(updateImageQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@image", updateImage.Name);
+                cmd.Parameters.AddWithValue("@id", updateImage.Id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+        }
+
+
+        public void UpdateStatus(Status updateStatus)
+        {
+            if (updateStatus.Id == 0)
+            {
+                AddStatus(updateStatus);
+                return;
+            }
+
+            if (updateStatus.DogStatus == "")
+            {
+                DeleteStatus(updateStatus.Id);
+                return;
+            }
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(updateImageQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@status", updateStatus.DogStatus);
+                cmd.Parameters.AddWithValue("@date", updateStatus.Date);
+                cmd.Parameters.AddWithValue("@id", updateStatus.Id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+        }
+
+        public void UpdateColor(Color updateColor)
+        {
+            if (updateColor.Id == 0)
+            {
+                AddColor(updateColor);
+                return;
+            }
+
+            if (updateColor.Name == "")
+            {
+                DeleteColor(updateColor.Id);
+                return;
+            }
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(updateColorQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@color", updateColor.Name);
+                cmd.Parameters.AddWithValue("@id", updateColor.Id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+        }
+
+
+
+
+
+
+
+        public void DeleteImage(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(deleteImageQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+        }
+
+        public void DeleteStatus(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(deleteStatusQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+        }
+
+        public void DeleteColor(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(deleteColorQuery + byId, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+
+            }
+        }
+
+
+
+
+
+
     }
 }
