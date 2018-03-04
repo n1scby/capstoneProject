@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using KennelManager.Data;
 using KennelManager.Models;
 using KennelManager.Services;
+using ApplicationCore.Interfaces;
+using Infrastructure;
 
 namespace KennelManager
 {
@@ -37,6 +39,20 @@ namespace KennelManager
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+
+            //  To pass the connection string use the lambda function and create a new instance of the repo
+            services.AddScoped<IDogRepository, DogRepository>(connectionADO =>
+            {
+                string connString = Configuration.GetConnectionString("DefaultConnection");
+                return new DogRepository(connString);
+            });
+
+            services.AddScoped<IBreedRepository, BreedRepository>(connectionADO =>
+            {
+                string connString = Configuration.GetConnectionString("DefaultConnection");
+                return new BreedRepository(connString);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

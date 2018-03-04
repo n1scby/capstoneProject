@@ -1,0 +1,93 @@
+﻿@model KennelManager.Models.DogViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Dog</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ThisDog.Id" class="control-label"></label>
+                <input asp-for="ThisDog.Id" class="form-control" />
+                <span asp-validation-for="ThisDog.Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.Name" class="control-label"></label>
+                <input asp-for="ThisDog.Name" class="form-control" />
+                <span asp-validation-for="ThisDog.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.Gender" class="control-label"></label>
+                <input asp-for="ThisDog.Gender" class="form-control" />
+                <span asp-validation-for="ThisDog.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.Altered" class="control-label"></label>
+                <input asp-for="ThisDog.Altered" class="form-control" />
+                <span asp-validation-for="ThisDog.Altered" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.DogAge.Number" class="control-label"></label>
+                <input asp-for="ThisDog.DogAge.Number" class="form-control" />
+                <span asp-validation-for="ThisDog.DogAge.Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.DogAge.UOM" class="control-label"></label>
+                <input asp-for="ThisDog.DogAge.UOM" class="form-control" />
+                <span asp-validation-for="ThisDog.DogAge.UOM" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ThisDog.Weight" class="control-label"></label>
+                <input asp-for="ThisDog.Weight" class="form-control" />
+                <span asp-validation-for="ThisDog.Weight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.LocationId" class="control-label"></label>
+                <input asp-for="ThisDog.LocationId" class="form-control" />
+                <span asp-validation-for="ThisDog.LocationId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="check
+                     box">
+                    <label>
+                        <input asp-for="ThisDog.MixedBeed" /> @Html.DisplayNameFor(model => model.ThisDog.MixedBeed)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.PrimaryBreed" class="control-label"></label>
+                <select asp-for="ThisDog.PrimaryBreed" asp-items="@Model.Breeds" class="form-control" />
+                <span asp-validation-for="ThisDog.PrimaryBreed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.SecondaryBreed" class="control-label"></label>
+                <input asp-for="ThisDog.SecondaryBreed" class="form-control" />
+                <span asp-validation-for="ThisDog.SecondaryBreed" class="text-danger"></span>
+            </div>
+ 
+            <div class="form-group">
+                <label asp-for="ThisDog.Description" class="control-label"></label>
+                <input asp-for="ThisDog.Description" class="form-control" />
+                <span asp-validation-for="ThisDog.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
