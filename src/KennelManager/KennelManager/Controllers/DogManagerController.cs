@@ -39,7 +39,7 @@ namespace KennelManager.Controllers
         public ActionResult Create()
         {
             DogViewModel dogVM = new DogViewModel();
-            dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(),"Id", "Value");
+            dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(),"Id", "Name");
             dogVM.ThisDog = new Dog();
             return View(dogVM);
         }

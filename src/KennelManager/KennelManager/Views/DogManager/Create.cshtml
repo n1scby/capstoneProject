@@ -13,9 +13,7 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ThisDog.Id" class="control-label"></label>
-                <input asp-for="ThisDog.Id" class="form-control" />
-                <span asp-validation-for="ThisDog.Id" class="text-danger"></span>
+                <input type="hidden" asp-for="ThisDog.Id" class="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="ThisDog.Name" class="control-label"></label>
@@ -39,7 +37,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="ThisDog.DogAge.UOM" class="control-label"></label>
-                <input asp-for="ThisDog.DogAge.UOM" class="form-control" />
+                <select asp-for="ThisDog.DogAge.UOM" class="form-control">
+                    <option value="">--select--</option>
+                    <option value="Year">Year(s)</option>
+                    <option value="Month">Months</option>
+                    <option value="Week">Weeks</option>
+                </select>
                 <span asp-validation-for="ThisDog.DogAge.UOM" class="text-danger"></span>
             </div>
 
@@ -63,18 +66,34 @@
             </div>
             <div class="form-group">
                 <label asp-for="ThisDog.PrimaryBreed" class="control-label"></label>
-                <select asp-for="ThisDog.PrimaryBreed" asp-items="@Model.Breeds" class="form-control" />
+                <select asp-for="ThisDog.PrimaryBreed" asp-items="@Model.Breeds" class="form-control">
+                    <option value="">--select--</option>
+                </select>
                 <span asp-validation-for="ThisDog.PrimaryBreed" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ThisDog.SecondaryBreed" class="control-label"></label>
-                <input asp-for="ThisDog.SecondaryBreed" class="form-control" />
+                <select asp-for="ThisDog.SecondaryBreed" asp-items="@Model.Breeds" class="form-control">
+                    <option value="">--select--</option>
+                </select>
                 <span asp-validation-for="ThisDog.SecondaryBreed" class="text-danger"></span>
             </div>
- 
+
+            <div class="form-group">
+                <label asp-for="ThisDog.Colors[0]" class="control-label"></label>
+                <select asp-for="ThisDog.Colors[0]" class="form-control">
+                    <option value="">--select--</option>
+                    <option value="White">White</option>
+                    <option value="Black">Black</option>
+                    <option value="Tan">Tan</option>
+                    <option value="Brown">Brown</option>
+                    <option value="Gray">Gray</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label asp-for="ThisDog.Description" class="control-label"></label>
-                <input asp-for="ThisDog.Description" class="form-control" />
+                <textarea asp-for="ThisDog.Description" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="ThisDog.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
