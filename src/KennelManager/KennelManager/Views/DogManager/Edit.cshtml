@@ -1,19 +1,20 @@
 ﻿@model KennelManager.Models.DogViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
-
-<h2>Create</h2>
 
 <h4>Dog</h4>
 <hr />
-@Html.Partial("_DogEdit", Model, ViewData)
 
+@Html.Partial("_DogEdit", Model, ViewData)
 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/dogEdit.js"></script>
+
 }
+
+
 

@@ -47,7 +47,7 @@
         var colorParent = colorButton.parentElement;
         var selectColorChild = colorParent.firstElementChild;
 
-        if (selectColorChild.tagName == "SELECT") {
+        if (selectColorChild.tagName === "SELECT") {
             selectColorChild.value = "";
         }
 
