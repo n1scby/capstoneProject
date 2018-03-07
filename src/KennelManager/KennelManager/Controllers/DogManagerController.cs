@@ -47,12 +47,18 @@ namespace KennelManager.Controllers
         // POST: DogManager/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(DogViewModel newDog, IFormCollection collection)
         {
             try
             {
                 // TODO: Add insert logic here
-
+                if (ModelState.IsValid)
+                {
+                    foreach (Color clr in newDog.ThisDog.Colors)
+                    {
+                        Console.WriteLine(clr.Name);
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch

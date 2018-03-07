@@ -83,9 +83,9 @@
 
                 @if (Model.ThisDog == null || Model.ThisDog.Colors == null)
                 {
-                    <label asp-for="ThisDog.Colors[0]" class="control-label"></label>
+                    <label asp-for="ThisDog.Colors[0].Name" class="control-label">Color</label>
                     <button type="button" id="add-color-button" class="btn"> + </button>
-                    <select asp-for="ThisDog.Colors[0]" class="form-control">
+                    <select asp-for="ThisDog.Colors[0].Name" class="form-control">
                         <option value="">--select--</option>
                         <option value="White">White</option>
                         <option value="Black">Black</option>
@@ -93,16 +93,16 @@
                         <option value="Brown">Brown</option>
                         <option value="Gray">Gray</option>
                     </select>
-                    <span asp-validation-for="ThisDog.Colors[0]" class="text-danger"></span>
+                    <span asp-validation-for="ThisDog.Colors[0].Name" class="text-danger"></span>
                     <input type="hidden" id="color-count" value="1" />
                 }
                 else
                 {  
                     for (int i = 0; i < Model.ThisDog.Colors.Count; i++)
                     {
-                        <label asp-for="ThisDog.Colors[i]" class="control-label"></label>
+                        <label asp-for="ThisDog.Colors[i].Name" class="control-label"></label>
                         <button type="button" id="add-color-button" class="btn"> + </button>
-                        <select asp-for="ThisDog.Colors[i]" class="form-control">
+                        <select asp-for="ThisDog.Colors[i].Name" class="form-control">
                             <option value="">--select--</option>
                             <option value="White">White</option>
                             <option value="Black">Black</option>
@@ -110,10 +110,10 @@
                             <option value="Brown">Brown</option>
                             <option value="Gray">Gray</option>
                         </select>
-                        <span asp-validation-for="ThisDog.Colors[i]" class="text-danger"></span>
+                        <span asp-validation-for="ThisDog.Colors[i].Name" class="text-danger"></span>
                         if (i > 0)
                         {
-                            <button type="button" id="@Model.ThisDog.Colors[i]" class="btn"> - </button>
+                            <button type="button" id="@Model.ThisDog.Colors[i].Name" class="btn"> - </button>
                         }
                     }
 

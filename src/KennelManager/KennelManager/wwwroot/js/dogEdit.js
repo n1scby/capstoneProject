@@ -4,7 +4,7 @@
     var addColorBtn = document.getElementById("add-color-button");
     var colorCount = document.getElementById("color-count");
 
-    var colorTemplate = '<select class="form-control" id="ThisDog.Colors[{{id}}]" name="ThisDog.Colors[{{id}}]">' +
+    var colorTemplate = '<select class="form-control" id="ThisDog.Colors[{{id}}].Name" name="ThisDog.Colors[{{id}}].Name">' +
         ' <option value=""> --select-- </option>' +
         ' <option value="White">White</option>' +
         ' <option value="Black">Black</option>' +
@@ -27,26 +27,35 @@
         newColorButton.classList.add("btn");
         newColorButton.id = "remove-color-" + colorCount.value;
         newColorButton.addEventListener("click", function () {
-            removeColor();
+            removeColor(newColorButton);
         });
 
         var newColorDiv = document.createElement("div");
         newColorDiv.classList.add("form-group");
 
         newColorDiv.innerHTML = colorTemplate.replace(new RegExp("{{id}}", 'g'), colorCount.value++);
-
-       
+        newColorDiv.appendChild(newColorButton);       
 
         colorSection.appendChild(newColorDiv);
-        colorSection.appendChild(newColorButton);
 
 
     });
 
 
-    var removeColor = function removeColor() {
-        alert("remove color, dude");
-    }
+    var removeColor = function removeColor(colorButton) {
+        // alert("remove color, dude");
+        var colorParent = colorButton.parentElement;
+        var selectColorChild = colorParent.firstElementChild;
+
+        if (selectColorChild.tagName == "SELECT") {
+            selectColorChild.value = "";
+        }
+
+        colorParent.classList.add("hideColor");
+     //   var parentParent = colorParent.parentElement;
+     //   parentParent.removeChild(colorParent);
+
+    };
 
   
 
