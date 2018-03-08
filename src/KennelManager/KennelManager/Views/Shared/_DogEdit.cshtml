@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="@ViewData["Title"]">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <input type="hidden" asp-for="ThisDog.Id" class="form-control" />
@@ -14,26 +14,50 @@
                 <span asp-validation-for="ThisDog.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ThisDog.Gender" class="control-label"></label>
-                <input type="radio" asp-for="ThisDog.Gender" value="male" class="form-control" /> Male
-                <input type="radio" asp-for="ThisDog.Gender" value="female" class="form-control" /> Female
+                @if (ViewData["Title"].ToString() == "Create")
+                {
+                <label asp-for="currentStatus.Date" class="control-label">Intake Date:</label>
+                <input type="datetime" class="form-control" asp-for="currentStatus.Date" />
+                }
+                else
+                {
+                <label asp-for="currentStatus.DogStatus" class="form-control">Status:</label>
+                <select asp-for="currentStatus.DogStatus" class="form-control">
+                    <option value="Intake">Intake</option>
+                    <option value="Available">Available</option>
+                    <option value="Pending">Adoption Pending</option>
+                    <option value="Adopted">Adopted</option>
+                    <option value="Unavailable">Unavailable</option>
+                </select>
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="ThisDog.Gender" class="radio-inline">
+                    <input type="radio" asp-for="ThisDog.Gender" value="male" /> Male
+                </label>
+                <label asp-for="ThisDog.Gender" class="radio-inline">
+                    <input type="radio" asp-for="ThisDog.Gender" value="female" /> Female
+                </label>
                 <span asp-validation-for="ThisDog.Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ThisDog.Altered" class="control-label"></label>
-                <input type="radio" asp-for="ThisDog.Altered" value="yes" class="form-control" />
-                <input type="radio" asp-for="ThisDog.Altered" value="no" class="form-control" />
-                <input type="radio" asp-for="ThisDog.Altered" value="unknown" class="form-control" />
+                <label asp-for="ThisDog.Altered" class="control-label">Spayed/Neutered</label>
+                <label class="radio-inline">
+                <input type="radio" asp-for="ThisDog.Altered" value="yes" /> Yes
+                    </label>
+                <label class="radio-inline">
+                <input type="radio" asp-for="ThisDog.Altered" value="no" /> No
+                    </label>
+                <label class="radio-inline">
+                <input type="radio" asp-for="ThisDog.Altered" value="unknown" /> Unknown
+                    </label>
                 <span asp-validation-for="ThisDog.Altered" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ThisDog.DogAge.Number" class="control-label">Age</label>
-                <input asp-for="ThisDog.DogAge.Number" class="form-control" />
+                <input asp-for="ThisDog.DogAge.Number" class="form-inline" />
                 <span asp-validation-for="ThisDog.DogAge.Number" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ThisDog.DogAge.UOM" class="control-label"></label>
-                <select asp-for="ThisDog.DogAge.UOM" class="form-control">
+                <select asp-for="ThisDog.DogAge.UOM" class="form-inline">
                     <option value="">--select--</option>
                     <option value="Year">Year(s)</option>
                     <option value="Month">Months</option>
@@ -41,6 +65,7 @@
                 </select>
                 <span asp-validation-for="ThisDog.DogAge.UOM" class="text-danger"></span>
             </div>
+           
 
             <div class="form-group">
                 <label asp-for="ThisDog.Weight" class="control-label"></label>
@@ -127,7 +152,11 @@
                 <span asp-validation-for="ThisDog.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <label asp-for="ThisDog.Images[0].Name" class="control-label">Image:</label>
+                <input type="text" asp-for="ThisDog.Images[0].Name" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </form>
     </div>

@@ -11,6 +11,7 @@ namespace KennelManager.Models
     {
         public Dog ThisDog { get; set; }
         public SelectList Breeds { get; set; }
+        public Status currentStatus { get; set; }
 
     }
 }
