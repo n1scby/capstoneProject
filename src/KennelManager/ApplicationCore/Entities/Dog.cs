@@ -21,5 +21,6 @@ namespace ApplicationCore.Entities
         public string Description { get; set; }
         public List<Color> Colors { get; set; }
 
+        
     }
 }

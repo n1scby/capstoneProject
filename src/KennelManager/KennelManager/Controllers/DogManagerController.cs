@@ -99,10 +99,34 @@ namespace KennelManager.Controllers
         public ActionResult Edit(int id)
         {
             DogViewModel dogVM = new DogViewModel();
+            dogVM.ThisDog = _dogRepo.GetDogById(id);
+            if (dogVM.ThisDog.Statuses.Count > 0)
+            {
+                dogVM.currentStatus = dogVM.ThisDog.Statuses.Last();
+            } else
+            {
+                dogVM.currentStatus = new Status();
+                dogVM.currentStatus.Date = DateTime.Now;
+                dogVM.currentStatus.DogStatus = "";
+                dogVM.currentStatus.DogId = dogVM.ThisDog.Id;
+                dogVM.currentStatus.Id = 0;
+             }
             dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(), "Id", "Name");
+            if (dogVM.ThisDog.Images.Count == 0)
+            {
+                Image newImage = new Image()
+                {
+                    Name = "noPhoto.jpg",
+                    DogId = dogVM.ThisDog.Id
+                };
+
+                dogVM.ThisDog.Images.Add(newImage);
+               
+
+            }
 
 
-            return View();
+            return View(dogVM);
         }
 
         // POST: DogManager/Edit/5

@@ -193,9 +193,9 @@ namespace Infrastructure
                                 Number = int.Parse(reader[4].ToString()),
                                 UOM = reader[5].ToString()
                             },
-                            LocationId = reader[6].ToString(),
-                            Weight = double.Parse(reader[7].ToString()),
-                            MixedBeed = (int.Parse(reader[8].ToString()) == 1) ? true : false,
+                            Weight = double.Parse(reader[6].ToString()),
+                            LocationId = reader[7].ToString(),
+                            MixedBeed = reader.GetBoolean(8),
                             PrimaryBreed = reader[9].ToString(),
                             SecondaryBreed = reader[10].ToString(),
                             Description = reader[11].ToString()
