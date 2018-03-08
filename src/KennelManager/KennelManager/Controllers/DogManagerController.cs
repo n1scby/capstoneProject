@@ -8,6 +8,7 @@ using KennelManager.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 
 namespace KennelManager.Controllers
 {
@@ -15,12 +16,16 @@ namespace KennelManager.Controllers
     {
         private readonly IDogRepository _dogRepo;
         private readonly IBreedRepository _breedRepo;
+        private readonly ILogger _logger;
 
 
-        public DogManagerController(IDogRepository dogRepo, IBreedRepository breedRepo)
+        public DogManagerController(IDogRepository dogRepo, IBreedRepository breedRepo, ILogger<DogManagerController> logger)
+            
+            
         {
             _dogRepo = dogRepo;
             _breedRepo = breedRepo;
+            _logger = logger;
         }
 
         // GET: DogManager
@@ -40,7 +45,7 @@ namespace KennelManager.Controllers
         {
             DogViewModel dogVM = new DogViewModel();
             dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(),"Id", "Name");
-           // dogVM.ThisDog = new Dog();
+            dogVM.ThisDog = new Dog();
             return View(dogVM);
         }
 
@@ -52,8 +57,11 @@ namespace KennelManager.Controllers
             try
             {
                 // TODO: Add insert logic here
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
+                    return View(newDog);
+                }
+                
                     // Remove deleted colors and set DogId
                     foreach (Color clr in newDog.ThisDog.Colors.ToList())
                     {
@@ -61,21 +69,29 @@ namespace KennelManager.Controllers
                         {
                             newDog.ThisDog.Colors.Remove(clr);
                         }
-                        if (clr.DogId == 0)
-                        {
-                            clr.DogId = newDog.ThisDog.Id;
-                        }
+                       
                     }
 
+                Status newStatus = new Status()
+                {
+                    DogStatus = "Arrival",
+                    Date = newDog.currentStatus.Date
+                };
+
+                newDog.ThisDog.Statuses = new List<Status>();
+                newDog.ThisDog.Statuses.Add(newStatus);
 
 
+                    _dogRepo.Add(newDog.ThisDog);
 
-                }
+
+                
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                _logger.LogError("Error on Create: " + ex.Message);
+                return View(newDog);
             }
         }
 
@@ -117,8 +133,10 @@ namespace KennelManager.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.LogError("Error on Update: " + ex.Message);
+
                 return View(editDog);
             }
         }
@@ -140,8 +158,10 @@ namespace KennelManager.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.LogError("Error on Delete: " + ex.Message);
+
                 return View();
             }
         }

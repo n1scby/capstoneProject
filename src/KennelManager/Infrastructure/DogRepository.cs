@@ -14,7 +14,8 @@ namespace Infrastructure
         private string byId = "WHERE Id = @id";
         private string deleteDogQuery = "DELETE Dog \n";
         private string updateDogQuery = "UPDATE Dog SET Name = @name, Gender = @gender, Altered = @altered, Age = @age, AgeUOM = @ageUOM, Weight = @weight, LocationId = @locationId, MixedBreed = @mixedBreed, PrimaryBreed = @primaryBreed, SecondaryBreed = @secondaryBreed, Description = @description\n";
-        private string insertDogQuery = "INSERT into Dog (Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description) values(@name, @gender, @altered, @age, @ageUOM, @weight, @locationId, @mixedBreed, @primaryBreed, @secondaryBreed, @description)";
+        private string insertDogQuery = "INSERT into Dog (Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description) values(@name, @gender, @altered, @age, @ageUOM, @weight, @locationId, @mixedBreed, @primaryBreed, @secondaryBreed, @description);" +
+                                        " SELECT CAST(scope_identity() AS int)";
 
         private string selectImageQuery = "SELECT Id, DogId, Image from DogImage ";
         private string updateImageQuery = "UPDATE DogImage SET Image = @image";
@@ -23,10 +24,10 @@ namespace Infrastructure
 
         private string byDogId = "WHERE DogId = @dogId";
 
-        private string selectStatusQuery = "SELECT Id, DogId, Status, Date from DogStatus ";
+        private string selectStatusQuery = "SELECT Id, DogId, Status, StatusDate from DogStatus ";
         private string updateStatusQuery = "UPDATE DogStatus SET Status = @status";
         private string deleteStatusQuery = "DELETE DogStatus";
-        private string insertStatusQuery = "Insert into DogStatus (DogId, Status, Date) values(@dogId, @status, @statusDate)";
+        private string insertStatusQuery = "Insert into DogStatus (DogId, Status, StatusDate) values(@dogId, @status, @statusDate)";
 
         private string selectColorQuery = "SELECT Id, DogId, Color from DogColor ";
         private string updateColorQuery = "UPDATE DogColor SET Color = @color";
@@ -41,6 +42,8 @@ namespace Infrastructure
 
         public void Add(Dog newDog)
         {
+            int newId = 0;
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 SqlCommand cmd = new SqlCommand(insertDogQuery, conn);
@@ -53,38 +56,42 @@ namespace Infrastructure
                 cmd.Parameters.AddWithValue("@weight", newDog.Weight);
                 cmd.Parameters.AddWithValue("@mixedBreed", newDog.MixedBeed);
                 cmd.Parameters.AddWithValue("@primaryBreed", newDog.PrimaryBreed);
-                cmd.Parameters.AddWithValue("@secondarBreed", newDog.SecondaryBreed);
+                cmd.Parameters.AddWithValue("@secondaryBreed", newDog.SecondaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@description", newDog.Description ?? "");
 
                 try
                 {
                     conn.Open();
-                    cmd.ExecuteNonQuery();
+                    newId = (int)cmd.ExecuteScalar();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    throw;
+                    throw ex;
                 }
 
             }
 
+            if (newId == 0)
+            {
+                return;
+            }
             // add colors
             foreach (Color clr in newDog.Colors)
             {
-                AddColor(clr);
+                AddColor(clr, newId);
             }
 
             //add status
             foreach (Status sts in newDog.Statuses)
             {
-                AddStatus(sts);
+                AddStatus(sts, newId);
             }
 
             // add images
             foreach (Image img in newDog.Images)
             {
-                AddImage(img);
+                AddImage(img, newId);
             }
 
         }
@@ -136,24 +143,24 @@ namespace Infrastructure
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    throw;
+                    throw ex;
                 }
 
             }
 
             foreach(Color clr in updatedDog.Colors)
             {
-                UpdateColor(clr);
+                UpdateColor(clr, updatedDog.Id);
             }
 
             foreach (Status sts in updatedDog.Statuses)
             {
-                UpdateStatus(sts);
+                UpdateStatus(sts, updatedDog.Id);
             }
 
             foreach (Image img in updatedDog.Images)
             {
-                UpdateImage(img);
+                UpdateImage(img, updatedDog.Id);
             }
 
         }
@@ -204,7 +211,7 @@ namespace Infrastructure
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    throw;
+                    throw ex;
                 }
 
             }
@@ -228,26 +235,26 @@ namespace Infrastructure
                     while (reader.Read())
                     {
 
-                        Dog dog = new Dog()
-                        {
-                            Id = int.Parse(reader[0].ToString()),
-                            Name = reader[1].ToString(),
-                            Gender = reader[2].ToString(),
-                            //   Altered = (int.Parse(reader[3].ToString()) == 1) ? true : false,
-                            Altered = reader[3].ToString(),
-                            DogAge = new Age()
-                            {
-                                Number = int.Parse(reader[4].ToString()),
-                                UOM = reader[5].ToString()
-                            },
-                            LocationId = reader[6].ToString(),
-                            Weight = double.Parse(reader[7].ToString()),
-                            MixedBeed = (int.Parse(reader[8].ToString()) == 1) ? true : false,
-                            PrimaryBreed = reader[9].ToString(),
-                            SecondaryBreed = reader[10].ToString(),
-                            Description = reader[11].ToString()
+                        Dog dog = new Dog();
 
+                        dog.Id = int.Parse(reader[0].ToString());
+                        dog.Name = reader[1].ToString();
+                        dog.Gender = reader[2].ToString();
+                        //   Altered = (int.Parse(reader[3].ToString()) == 1) ? true : false,
+                        dog.Altered = reader[3].ToString();
+                        dog.DogAge = new Age()
+                        {
+                            Number = int.Parse(reader[4].ToString()),
+                            UOM = reader[5].ToString()
                         };
+                        dog.Weight = double.Parse(reader[6].ToString());
+                        dog.LocationId = reader[7].ToString();
+                        dog.MixedBeed = reader.GetBoolean(8);
+                        dog.PrimaryBreed = reader[9].ToString();
+                        dog.SecondaryBreed = reader[10].ToString();
+                        dog.Description = reader[11].ToString();
+
+                       
 
                         dog.Images = GetImagesByDogId(dog.Id);
                         dog.Colors = GetColorsByDogId(dog.Id);
@@ -259,8 +266,8 @@ namespace Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
-                    throw;
+                    throw new Exception("GetDogList:" + ex.Message);
+                 
                 }
 
             }
@@ -299,7 +306,7 @@ namespace Infrastructure
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    throw;
+                    throw new Exception("GetImagesById:" + ex.Message);
                 }
 
             }
@@ -338,7 +345,7 @@ namespace Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    throw new Exception("GetStatusesById:" + ex.Message);
                     throw;
                 }
 
@@ -376,7 +383,7 @@ namespace Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    throw new Exception("GetColorsById:" + ex.Message);
                     throw;
                 }
 
@@ -388,13 +395,13 @@ namespace Infrastructure
 
 
 
-        public void AddImage(Image newImage)
+        public void AddImage(Image newImage, int dogId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                                
                     SqlCommand cmd = new SqlCommand(insertImageQuery, conn);
-                    cmd.Parameters.AddWithValue("@dogId", newImage.DogId);
+                    cmd.Parameters.AddWithValue("@dogId", dogId);
                     cmd.Parameters.AddWithValue("@image", newImage.Name);
 
                     try
@@ -411,13 +418,13 @@ namespace Infrastructure
             }
         }
 
-        public void AddStatus(Status newStatus)
+        public void AddStatus(Status newStatus, int dogId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 
                     SqlCommand cmd = new SqlCommand(insertStatusQuery, conn);
-                    cmd.Parameters.AddWithValue("@dogId", newStatus.DogId);
+                    cmd.Parameters.AddWithValue("@dogId", dogId);
                     cmd.Parameters.AddWithValue("@status", newStatus.DogStatus);
                     cmd.Parameters.AddWithValue("@date", newStatus.Date);
 
@@ -435,13 +442,13 @@ namespace Infrastructure
             }
         }
 
-        public void AddColor(Color newColor)
+        public void AddColor(Color newColor, int dogId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
 
                     SqlCommand cmd = new SqlCommand(insertColorQuery, conn);
-                    cmd.Parameters.AddWithValue("@dogId", newColor.DogId);
+                    cmd.Parameters.AddWithValue("@dogId", dogId);
                     cmd.Parameters.AddWithValue("@color", newColor.Name);
 
                     try
@@ -459,11 +466,11 @@ namespace Infrastructure
         }
 
 
-        public void UpdateImage(Image updateImage)
+        public void UpdateImage(Image updateImage, int dogId)
         {
             if (updateImage.Id == 0)
             {
-                AddImage(updateImage);
+                AddImage(updateImage, dogId);
                 return;
             }
 
@@ -495,11 +502,11 @@ namespace Infrastructure
         }
 
 
-        public void UpdateStatus(Status updateStatus)
+        public void UpdateStatus(Status updateStatus, int dogId)
         {
             if (updateStatus.Id == 0)
             {
-                AddStatus(updateStatus);
+                AddStatus(updateStatus, dogId);
                 return;
             }
 
@@ -512,7 +519,7 @@ namespace Infrastructure
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
 
-                SqlCommand cmd = new SqlCommand(updateImageQuery + byId, conn);
+                SqlCommand cmd = new SqlCommand(updateStatusQuery + byId, conn);
                 cmd.Parameters.AddWithValue("@status", updateStatus.DogStatus);
                 cmd.Parameters.AddWithValue("@date", updateStatus.Date);
                 cmd.Parameters.AddWithValue("@id", updateStatus.Id);
@@ -531,11 +538,11 @@ namespace Infrastructure
             }
         }
 
-        public void UpdateColor(Color updateColor)
+        public void UpdateColor(Color updateColor, int dogId)
         {
             if (updateColor.Id == 0)
             {
-                AddColor(updateColor);
+                AddColor(updateColor, dogId);
                 return;
             }
 
