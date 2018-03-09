@@ -15,21 +15,21 @@
             </div>
             <div class="form-group">
                 @if (ViewData["Title"].ToString() == "Create")
-        {
-            <label asp-for="currentStatus.Date" class="control-label">Arrival Date:</label>
-            <input type="date" class="form-control" asp-for="currentStatus.Date" />
-}
-else
-{
-        <label asp-for="currentStatus.DogStatus" class="control-label">Status:</label>
-        <select asp-for="currentStatus.DogStatus" class="form-control">
-            <option value="Intake">Intake</option>
-            <option value="Available">Available</option>
-            <option value="Pending">Adoption Pending</option>
-            <option value="Adopted">Adopted</option>
-            <option value="Unavailable">Unavailable</option>
-        </select>
-}
+                {
+                    <label asp-for="currentStatus.Date" class="control-label">Arrival Date:</label>
+                    <input type="date" class="form-control" asp-for="currentStatus.Date" />
+                }
+                else
+                {
+                    <label asp-for="currentStatus.DogStatus" class="control-label">Status:</label>
+                    <select asp-for="currentStatus.DogStatus" class="form-control">
+                        <option value="Intake">Intake</option>
+                        <option value="Available">Available</option>
+                        <option value="Pending">Adoption Pending</option>
+                        <option value="Adopted">Adopted</option>
+                        <option value="Unavailable">Unavailable</option>
+                    </select>
+                }
             </div>
             <div class="form-group">
                 <label asp-for="ThisDog.Gender" class="radio-inline">
@@ -100,82 +100,97 @@ else
                 <span asp-validation-for="ThisDog.SecondaryBreed" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
 
-                @if (Model.ThisDog == null || Model.ThisDog.Colors == null)
-        {
-            <label asp-for="ThisDog.Colors[0].Name" class="control-label">Color</label>
-            <button type="button" id="add-color-button" class="btn"> + </button>
-            <select asp-for="ThisDog.Colors[0].Name" class="form-control">
-                <option value="">--select--</option>
-                <option value="White">White</option>
-                <option value="Black">Black</option>
-                <option value="Tan">Tan</option>
-                <option value="Brown">Brown</option>
-                <option value="Gray">Gray</option>
-            </select>
-            <span asp-validation-for="ThisDog.Colors[0].Name" class="text-danger"></span>
-            <input type="hidden" id="color-count" value="1" />
-}
-else
-{
-    for (int i = 0; i < Model.ThisDog.Colors.Count; i++)
-    {
-        <label asp-for="ThisDog.Colors[i].Name" class="control-label"></label>
-        <button type="button" id="add-color-button" class="btn"> + </button>
-        <select asp-for="ThisDog.Colors[i].Name" class="form-control">
-            <option value="">--select--</option>
-            <option value="White">White</option>
-            <option value="Black">Black</option>
-            <option value="Tan">Tan</option>
-            <option value="Brown">Brown</option>
-            <option value="Gray">Gray</option>
-        </select>
-        <span asp-validation-for="ThisDog.Colors[i].Name" class="text-danger"></span>
-if (i > 0)
-{
-        <button type="button" id="@Model.ThisDog.Colors[i].Name" class="btn"> - </button>
-}
-}
 
-        <input type="hidden" id="color-count" value="@Model.ThisDog.Colors.Count" />
+            @if (Model.ThisDog == null || Model.ThisDog.Colors == null)
+            {
+                <div class="form-group">
+                    <label asp-for="ThisDog.Colors[0].Name" class="control-label">Color</label>
+                    <button type="button" id="add-color-button" class="btn"> + </button>
+                    <select asp-for="ThisDog.Colors[0].Name" class="form-control">
+                        <option value="">--select--</option>
+                        <option value="White">White</option>
+                        <option value="Black">Black</option>
+                        <option value="Tan">Tan</option>
+                        <option value="Brown">Brown</option>
+                        <option value="Gray">Gray</option>
+                    </select>
+                    <span asp-validation-for="ThisDog.Colors[0].Name" class="text-danger"></span>
+                    <input type="hidden" id="color-count" value="1" />
+                </div>
+            }
+            else
+            {
+                for (int i = 0; i < Model.ThisDog.Colors.Count; i++)
+                {
+                    <div class="form-group">
+                        @if (i == 0)
+                        {
+                        <label asp-for="ThisDog.Colors[i].Name" class="control-label"></label>
+                        <button type="button" id="add-color-button" class="btn"> + </button>
+                        }
 
-}
+                        <select asp-for="ThisDog.Colors[i].Name" class="form-control">
+                            <option value="">--select--</option>
+                            <option value="White">White</option>
+                            <option value="Black">Black</option>
+                            <option value="Tan">Tan</option>
+                            <option value="Brown">Brown</option>
+                            <option value="Gray">Gray</option>
+                        </select>
+                        <span asp-validation-for="ThisDog.Colors[i].Name" class="text-danger"></span>
+                        <input type="hidden" asp-validation-for="ThisDog.Colors[i].Id" />
+
+                        @if (i > 0)
+                        {
+                            string buttonId = "colorBtn-" + i;
+                            <button type="button" id=@buttonId class="btn"> - </button>
+                        }
+                        
+                    </div>
+                }
+            }
+                <input type="hidden" id="color-count" value="@Model.ThisDog.Colors.Count" />
 
                 <div id="color-section"></div>
-            </div>
 
 
-            <div class="form-group">
-                <label asp-for="ThisDog.Description" class="control-label"></label>
-                <textarea asp-for="ThisDog.Description" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="ThisDog.Description" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <label name-for="pic"></label>
-                <input type="file" name="pic" />
-            </div>
-   @if (Model.ThisDog != null && Model.ThisDog.Images != null)
+                <div class="form-group">
+                    <label asp-for="ThisDog.Description" class="control-label"></label>
+                    <textarea asp-for="ThisDog.Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="ThisDog.Description" class="text-danger"></span>
+                </div>
 
-   { 
-   for (int i = 0; i < Model.ThisDog.Images.Count;  i++) {
-            <label asp-for="ThisDog.Images[i].Name" class="control-label">Image:</label>
-            <img src="~/images/@Model.ThisDog.Images[i].Name" alt="" class="img-responsive" />
-            <input type="hidden" asp-for="ThisDog.Images[i].Name" />
+                <div class="form-group">
+                    <label name-for="pic"></label>
+                    <input type="file" name="pic" />
+                </div>
+                @if (Model.ThisDog != null && Model.ThisDog.Images != null)
 
-            }
+                {
+                    for (int i = 0; i < Model.ThisDog.Images.Count; i++)
+                    {
+                        <label asp-for="ThisDog.Images[i].Name" class="control-label">Image:</label>
+                        <img src="~/images/@Model.ThisDog.Images[i].Name" alt="" class="img-responsive" />
+                        <input type="hidden" asp-for="ThisDog.Images[i].Name" />
+                        <input type="hidden" asp-for="ThisDog.Images[i].Id" />
 
-   }
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+                    }
+
+                }
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    </div>
+
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
 </div>
 
 

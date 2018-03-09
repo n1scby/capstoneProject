@@ -4,6 +4,9 @@
     var addColorBtn = document.getElementById("add-color-button");
     var colorCount = document.getElementById("color-count");
 
+   
+    
+
     var colorTemplate = '<select class="form-control" id="ThisDog.Colors[{{id}}].Name" name="ThisDog.Colors[{{id}}].Name">' +
         ' <option value=""> --select-- </option>' +
         ' <option value="White">White</option>' +
@@ -56,6 +59,19 @@
      //   parentParent.removeChild(colorParent);
 
     };
+
+    var initialColorBtn = function initialColorBtn() {
+
+        for (var i = 1; i < colorCount.value; i++) {
+            var newClrBtn = document.getElementById("colorBtn-" + i);
+            newClrBtn.addEventListener("click", function () {
+                removeColor(newClrBtn);
+            });
+        }
+
+    };
+
+    initialColorBtn();
 
   
 
