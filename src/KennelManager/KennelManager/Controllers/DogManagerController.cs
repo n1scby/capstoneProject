@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using KennelManager.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,15 +19,17 @@ namespace KennelManager.Controllers
         private readonly IDogRepository _dogRepo;
         private readonly IBreedRepository _breedRepo;
         private readonly ILogger _logger;
+        private readonly IHostingEnvironment _hostEnv;
 
 
-        public DogManagerController(IDogRepository dogRepo, IBreedRepository breedRepo, ILogger<DogManagerController> logger)
+        public DogManagerController(IDogRepository dogRepo, IBreedRepository breedRepo, ILogger<DogManagerController> logger, IHostingEnvironment hostEnv)
             
             
         {
             _dogRepo = dogRepo;
             _breedRepo = breedRepo;
             _logger = logger;
+            _hostEnv = hostEnv;
         }
 
         // GET: DogManager
@@ -52,7 +56,7 @@ namespace KennelManager.Controllers
         // POST: DogManager/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(DogViewModel newDog, IFormCollection collection)
+        public ActionResult Create(DogViewModel newDog, IFormFile pic, IFormCollection collection)
         {
             try
             {
@@ -82,7 +86,23 @@ namespace KennelManager.Controllers
                 newDog.ThisDog.Statuses.Add(newStatus);
 
 
-                    _dogRepo.Add(newDog.ThisDog);
+                if (pic != null)
+                {
+                    Image newImage = new Image();
+                    var filename = Path.Combine(_hostEnv.WebRootPath, "images", Path.GetFileName(pic.FileName));
+                    pic.CopyTo(new FileStream(filename, FileMode.Create));
+                    newImage.Name = pic.FileName;
+                    newImage.DogId = newDog.ThisDog.Id;
+                    Image noImage = newDog.ThisDog.Images.Find(p => p.Name == "noPhoto.jpg");
+                    if (noImage != null)
+                    {
+                        newDog.ThisDog.Images.Remove(noImage);
+                    }
+                    newDog.ThisDog.Images.Add(newImage);
+                }
+
+
+                _dogRepo.Add(newDog.ThisDog);
 
 
                 
@@ -132,7 +152,7 @@ namespace KennelManager.Controllers
         // POST: DogManager/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(DogViewModel editDog, IFormCollection collection)
+        public ActionResult Edit(DogViewModel editDog, IFormFile pic,  IFormCollection collection)
         {
             try
             {
@@ -153,6 +173,24 @@ namespace KennelManager.Controllers
                         clr.DogId = editDog.ThisDog.Id;
                     }
                 }
+
+                if (pic != null)
+                {
+                    Image newImage = new Image();
+                    var filename = Path.Combine(_hostEnv.WebRootPath, "images", Path.GetFileName(pic.FileName));
+                    pic.CopyTo(new FileStream(filename, FileMode.Create));
+                    newImage.Name = pic.FileName;
+                    newImage.DogId = editDog.ThisDog.Id;
+                    Image noImage = new Image();
+                    noImage=editDog.ThisDog.Images.Find(p => p.Name == "noPhoto.jpg");
+                    if (noImage != null)
+                    {
+                        editDog.ThisDog.Images.Remove(noImage);
+                    }
+                    editDog.ThisDog.Images.Add(newImage);
+                }
+
+                _dogRepo.Edit(editDog.ThisDog);
 
 
                 return RedirectToAction(nameof(Index));

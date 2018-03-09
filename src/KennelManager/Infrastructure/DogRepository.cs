@@ -131,7 +131,7 @@ namespace Infrastructure
                 cmd.Parameters.AddWithValue("@weight", updatedDog.Weight);
                 cmd.Parameters.AddWithValue("@mixedBreed", updatedDog.MixedBeed);
                 cmd.Parameters.AddWithValue("@primaryBreed", updatedDog.PrimaryBreed);
-                cmd.Parameters.AddWithValue("@secondarBreed", updatedDog.SecondaryBreed);
+                cmd.Parameters.AddWithValue("@secondaryBreed", updatedDog.SecondaryBreed);
                 cmd.Parameters.AddWithValue("@description", updatedDog.Description ?? "");
                 cmd.Parameters.AddWithValue("@id", updatedDog.Id);
 
@@ -141,9 +141,8 @@ namespace Infrastructure
                     cmd.ExecuteNonQuery();
                 }
                 catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    throw ex;
+                {                    
+                    throw new Exception("Update Dog: " + ex.Message);
                 }
 
             }
