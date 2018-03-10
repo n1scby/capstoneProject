@@ -60,18 +60,20 @@
 
     };
 
-    var initialColorBtn = function initialColorBtn() {
+    var initialColorBtn = function initialColorBtn(i) {
 
-        for (var i = 1; i < colorCount.value; i++) {
+   //     for (var i = 1; i < colorCount.value; i++) {
             var newClrBtn = document.getElementById("colorBtn-" + i);
             newClrBtn.addEventListener("click", function () {
                 removeColor(newClrBtn);
             });
-        }
+    //    }
 
     };
 
-    initialColorBtn();
+    for (var i = 1; i < colorCount.value; i++){
+        initialColorBtn(i);
+    }
 
   
 
