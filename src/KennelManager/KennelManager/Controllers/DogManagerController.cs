@@ -160,14 +160,14 @@ namespace KennelManager.Controllers
                 {
                     return View(editDog);
                 }
-                // TODO: Add update logic here
+                
                 // Remove deleted colors and set DogId
                 foreach (Color clr in editDog.ThisDog.Colors.ToList())
                 {
-                    if (clr.Name == "" || clr.Name == null)
-                    {
-                        editDog.ThisDog.Colors.Remove(clr);
-                    }
+                    //if (clr.Name == "" || clr.Name == null)
+                    //{
+                    //    editDog.ThisDog.Colors.Remove(clr);
+                    //}
                     if (clr.DogId == 0)
                     {
                         clr.DogId = editDog.ThisDog.Id;

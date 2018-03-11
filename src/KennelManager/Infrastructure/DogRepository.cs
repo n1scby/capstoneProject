@@ -18,21 +18,21 @@ namespace Infrastructure
                                         " SELECT CAST(scope_identity() AS int)";
 
         private string selectImageQuery = "SELECT Id, DogId, Image from DogImage ";
-        private string updateImageQuery = "UPDATE DogImage SET Image = @image";
-        private string deleteImageQuery = "DELETE DogImage";
-        private string insertImageQuery = "Insert into DogImage (DogId, Image) values(@dogId, @image)";
+        private string updateImageQuery = "UPDATE DogImage SET Image = @image \n";
+        private string deleteImageQuery = "DELETE DogImage \n";
+        private string insertImageQuery = "Insert into DogImage (DogId, Image) values(@dogId, @image) ";
 
         private string byDogId = "WHERE DogId = @dogId";
 
         private string selectStatusQuery = "SELECT Id, DogId, Status, StatusDate from DogStatus ";
-        private string updateStatusQuery = "UPDATE DogStatus SET Status = @status";
-        private string deleteStatusQuery = "DELETE DogStatus";
-        private string insertStatusQuery = "Insert into DogStatus (DogId, Status, StatusDate) values(@dogId, @status, @statusDate)";
+        private string updateStatusQuery = "UPDATE DogStatus SET Status = @status \n";
+        private string deleteStatusQuery = "DELETE DogStatus \n";
+        private string insertStatusQuery = "Insert into DogStatus (DogId, Status, StatusDate) values(@dogId, @status, @statusDate) ";
 
         private string selectColorQuery = "SELECT Id, DogId, Color from DogColor ";
-        private string updateColorQuery = "UPDATE DogColor SET Color = @color";
-        private string deleteColorQuery = "DELETE DogColor";
-        private string insertColorQuery = "Insert into DogColor (DogId, Color) values(@dogId, @color)";
+        private string updateColorQuery = "UPDATE DogColor SET Color = @color \n";
+        private string deleteColorQuery = "DELETE DogColor \n";
+        private string insertColorQuery = "Insert into DogColor (DogId, Color) values(@dogId, @color) ";
 
         public DogRepository(string connectionString)
         {
@@ -130,7 +130,7 @@ namespace Infrastructure
                 cmd.Parameters.AddWithValue("@locationId", updatedDog.LocationId ?? "");
                 cmd.Parameters.AddWithValue("@weight", updatedDog.Weight);
                 cmd.Parameters.AddWithValue("@mixedBreed", updatedDog.MixedBeed);
-                cmd.Parameters.AddWithValue("@primaryBreed", updatedDog.PrimaryBreed);
+                cmd.Parameters.AddWithValue("@primaryBreed", updatedDog.PrimaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@secondaryBreed", updatedDog.SecondaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@description", updatedDog.Description ?? "");
                 cmd.Parameters.AddWithValue("@id", updatedDog.Id);
@@ -545,7 +545,7 @@ namespace Infrastructure
                 return;
             }
 
-            if (updateColor.Name == "")
+            if (updateColor.Name == "" || updateColor.Name == null)
             {
                 DeleteColor(updateColor.Id);
                 return;
