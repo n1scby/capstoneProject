@@ -425,7 +425,7 @@ namespace Infrastructure
                     SqlCommand cmd = new SqlCommand(insertStatusQuery, conn);
                     cmd.Parameters.AddWithValue("@dogId", dogId);
                     cmd.Parameters.AddWithValue("@status", newStatus.DogStatus);
-                    cmd.Parameters.AddWithValue("@date", newStatus.Date);
+                    cmd.Parameters.AddWithValue("@statusDate", newStatus.Date);
 
                     try
                     {
@@ -505,6 +505,7 @@ namespace Infrastructure
         {
             if (updateStatus.Id == 0)
             {
+                updateStatus.Date = DateTime.Now;
                 AddStatus(updateStatus, dogId);
                 return;
             }

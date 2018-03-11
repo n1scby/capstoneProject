@@ -160,7 +160,7 @@ namespace KennelManager.Controllers
                 {
                     return View(editDog);
                 }
-                
+
                 // Remove deleted colors and set DogId
                 foreach (Color clr in editDog.ThisDog.Colors.ToList())
                 {
@@ -173,6 +173,12 @@ namespace KennelManager.Controllers
                         clr.DogId = editDog.ThisDog.Id;
                     }
                 }
+
+                // add status to array
+                editDog.ThisDog.Statuses = new List<Status>();
+                editDog.ThisDog.Statuses.Add(editDog.currentStatus);
+                
+
 
                 if (pic != null)
                 {
