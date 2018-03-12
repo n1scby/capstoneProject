@@ -13,7 +13,7 @@ namespace Infrastructure
         private string selectBreedQuery = "SELECT Id, Breed FROM DogBreed \n";
         private string byId = "WHERE Id = @id";
         private string deleteBreedQuery = "DELETE DogBreed \n";
-        private string updateBreedQuery = "UPDATE DogBreed SET Breed = @breed\n";
+        private string updateBreedQuery = "UPDATE DogBreed SET Breed = @breed \n";
         private string insertBreedQuery = "INSERT into DogBreed (Breed) values(@breed)";
 
         public BreedRepository(string connectionString)

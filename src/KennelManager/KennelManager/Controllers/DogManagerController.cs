@@ -48,7 +48,7 @@ namespace KennelManager.Controllers
         public ActionResult Create()
         {
             DogViewModel dogVM = new DogViewModel();
-            dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(),"Id", "Name");
+            dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(),"Name", "Name");
             dogVM.ThisDog = new Dog();
             return View(dogVM);
         }
@@ -85,7 +85,7 @@ namespace KennelManager.Controllers
                 newDog.ThisDog.Statuses = new List<Status>();
                 newDog.ThisDog.Statuses.Add(newStatus);
 
-
+                newDog.ThisDog.Images = new List<Image>();
                 if (pic != null)
                 {
                     Image newImage = new Image();
@@ -131,7 +131,7 @@ namespace KennelManager.Controllers
                 dogVM.currentStatus.DogId = dogVM.ThisDog.Id;
                 dogVM.currentStatus.Id = 0;
              }
-            dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(), "Id", "Name");
+            dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(), "Name", "Name");
             if (dogVM.ThisDog.Images.Count == 0)
             {
                 Image newImage = new Image()
@@ -176,7 +176,11 @@ namespace KennelManager.Controllers
 
                 // add status to array
                 editDog.ThisDog.Statuses = new List<Status>();
-                editDog.ThisDog.Statuses.Add(editDog.currentStatus);
+                Status lastStatus = _dogRepo.GetDogById(editDog.ThisDog.Id).Statuses.Last();
+                if (editDog.currentStatus.DogStatus != lastStatus.DogStatus )
+                {
+                    editDog.ThisDog.Statuses.Add(editDog.currentStatus);
+                }
                 
 
 
