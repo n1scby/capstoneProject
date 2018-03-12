@@ -77,23 +77,32 @@ namespace Infrastructure
                 return;
             }
             // add colors
-            foreach (Color clr in newDog.Colors)
+            if (newDog.Colors != null)
             {
-                AddColor(clr, newId);
+                foreach (Color clr in newDog.Colors)
+                {
+                    AddColor(clr, newId);
+                }
             }
 
+
             //add status
-            foreach (Status sts in newDog.Statuses)
+            if (newDog.Statuses != null)
             {
-                AddStatus(sts, newId);
+                foreach (Status sts in newDog.Statuses)
+                {
+                    AddStatus(sts, newId);
+                }
             }
 
             // add images
-            foreach (Image img in newDog.Images)
+            if (newDog.Images != null)
             {
-                AddImage(img, newId);
+                foreach (Image img in newDog.Images)
+                {
+                    AddImage(img, newId);
+                }
             }
-
         }
 
         public void Delete(Dog deleteDog)
@@ -473,7 +482,7 @@ namespace Infrastructure
                 return;
             }
 
-            if (updateImage.Name == "")
+            if (updateImage.Name == "" || updateImage.Name == null)
             {
                 DeleteImage(updateImage.Id);
                 return;

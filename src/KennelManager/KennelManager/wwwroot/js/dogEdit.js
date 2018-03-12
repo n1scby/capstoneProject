@@ -3,6 +3,7 @@
     var colorSection = document.getElementById("color-section");
     var addColorBtn = document.getElementById("add-color-button");
     var colorCount = document.getElementById("color-count");
+    var imageCount = document.getElementById("image-count");
 
    
     
@@ -54,11 +55,12 @@
             selectColorChild.value = "";
         }
 
-        colorParent.classList.add("hideColor");
+        colorParent.classList.add("hideSection");
      //   var parentParent = colorParent.parentElement;
      //   parentParent.removeChild(colorParent);
 
     };
+
 
     var initialColorBtn = function initialColorBtn(i) {
 
@@ -71,11 +73,36 @@
 
     };
 
+    var removeImage = function removeImage(imageButton) {
+        var imageParent = imageButton.parentElement;
+        var inputChild = imageParent.firstElementChild;
+
+        if (inputChild.tagName === "INPUT") {
+            inputChild.value = "";
+        }
+
+        imageParent.classList.add("hideSection");
+     
+
+    };
+
+    var initialImageBtn = function initialImageBtn(i) {
+
+        var newImgBtn = document.getElementById("imageBtn-" + i);
+        newImgBtn.addEventListener("click", function () {
+            removeImage(newImgBtn);
+        });
+
+    };
+
+
     for (var i = 1; i < colorCount.value; i++){
         initialColorBtn(i);
     }
 
-  
+    for (var i = 1; i < imageCount.value; i++) {
+        initialImageBtn(i);
+    }
 
 })();
 

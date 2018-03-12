@@ -212,17 +212,17 @@ namespace KennelManager.Controllers
         // GET: DogManager/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(_dogRepo.GetDogById(id));
         }
 
         // POST: DogManager/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(Dog deleteDog, IFormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                _dogRepo.Delete(deleteDog);
 
                 return RedirectToAction(nameof(Index));
             }
