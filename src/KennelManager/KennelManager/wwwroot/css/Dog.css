@@ -1,1 +1,29 @@
 ﻿.hideSection {display: none;}
+#image-section {
+    padding: 1rem;
+}
+
+#name-section {
+    padding: 1rem;
+}
+
+#gender-section {
+    padding: 5rem 1rem 2rem 1rem;
+   
+}
+
+#description-section {
+    padding: 1rem;
+}
+
+#breed-section {
+    padding: 1rem;
+}
+
+#form-section { 
+    background-color: rgb(243, 242, 242);
+}
+
+.label-adjust{
+    padding-right: 1rem;
+}
