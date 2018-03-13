@@ -9,6 +9,7 @@ namespace ApplicationCore.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string CurrentStatus { get; set; }
         public List<Status> Statuses { get; set; }
         public string Gender { get; set; }
         public string Altered { get; set; }

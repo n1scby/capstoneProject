@@ -10,11 +10,11 @@ namespace Infrastructure
     public class DogRepository : IDogRepository
     {
         private string _connectionString;
-        private string selectDogQuery = "SELECT Id, Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description FROM Dog \n";
+        private string selectDogQuery = "SELECT Id, Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description, CurrentStatus FROM Dog \n";
         private string byId = "WHERE Id = @id";
         private string deleteDogQuery = "DELETE Dog \n";
-        private string updateDogQuery = "UPDATE Dog SET Name = @name, Gender = @gender, Altered = @altered, Age = @age, AgeUOM = @ageUOM, Weight = @weight, LocationId = @locationId, MixedBreed = @mixedBreed, PrimaryBreed = @primaryBreed, SecondaryBreed = @secondaryBreed, Description = @description\n";
-        private string insertDogQuery = "INSERT into Dog (Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description) values(@name, @gender, @altered, @age, @ageUOM, @weight, @locationId, @mixedBreed, @primaryBreed, @secondaryBreed, @description);" +
+        private string updateDogQuery = "UPDATE Dog SET Name = @name, Gender = @gender, Altered = @altered, Age = @age, AgeUOM = @ageUOM, Weight = @weight, LocationId = @locationId, MixedBreed = @mixedBreed, PrimaryBreed = @primaryBreed, SecondaryBreed = @secondaryBreed, Description = @description, CurrentStatus = @currentStatus \n";
+        private string insertDogQuery = "INSERT into Dog (Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description, CurrentStatus) values(@name, @gender, @altered, @age, @ageUOM, @weight, @locationId, @mixedBreed, @primaryBreed, @secondaryBreed, @description, @currentStatus);" +
                                         " SELECT CAST(scope_identity() AS int)";
 
         private string selectImageQuery = "SELECT Id, DogId, Image from DogImage ";
@@ -58,6 +58,7 @@ namespace Infrastructure
                 cmd.Parameters.AddWithValue("@primaryBreed", newDog.PrimaryBreed);
                 cmd.Parameters.AddWithValue("@secondaryBreed", newDog.SecondaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@description", newDog.Description ?? "");
+                cmd.Parameters.AddWithValue("@currentStatus", newDog.CurrentStatus);
 
                 try
                 {
@@ -142,6 +143,7 @@ namespace Infrastructure
                 cmd.Parameters.AddWithValue("@primaryBreed", updatedDog.PrimaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@secondaryBreed", updatedDog.SecondaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@description", updatedDog.Description ?? "");
+                cmd.Parameters.AddWithValue("@currentStatus", updatedDog.CurrentStatus);
                 cmd.Parameters.AddWithValue("@id", updatedDog.Id);
 
                 try
@@ -206,7 +208,8 @@ namespace Infrastructure
                             MixedBeed = reader.GetBoolean(8),
                             PrimaryBreed = reader[9].ToString(),
                             SecondaryBreed = reader[10].ToString(),
-                            Description = reader[11].ToString()
+                            Description = reader[11].ToString(),
+                            CurrentStatus = reader[12].ToString()
 
                         };
 
@@ -261,6 +264,7 @@ namespace Infrastructure
                         dog.PrimaryBreed = reader[9].ToString();
                         dog.SecondaryBreed = reader[10].ToString();
                         dog.Description = reader[11].ToString();
+                        dog.CurrentStatus = reader[12].ToString();
 
                        
 

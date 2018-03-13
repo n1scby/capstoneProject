@@ -84,6 +84,7 @@ namespace KennelManager.Controllers
 
                 newDog.ThisDog.Statuses = new List<Status>();
                 newDog.ThisDog.Statuses.Add(newStatus);
+                newDog.ThisDog.CurrentStatus = newStatus.DogStatus;
 
                 newDog.ThisDog.Images = new List<Image>();
                 if (pic != null)
@@ -176,10 +177,12 @@ namespace KennelManager.Controllers
 
                 // add status to array
                 editDog.ThisDog.Statuses = new List<Status>();
-                Status lastStatus = _dogRepo.GetDogById(editDog.ThisDog.Id).Statuses.Last();
-                if (editDog.currentStatus.DogStatus != lastStatus.DogStatus )
+                string lastStatus = _dogRepo.GetDogById(editDog.ThisDog.Id).CurrentStatus;
+              
+                if (editDog.currentStatus.DogStatus != lastStatus )
                 {
                     editDog.ThisDog.Statuses.Add(editDog.currentStatus);
+                    editDog.ThisDog.CurrentStatus = editDog.currentStatus.DogStatus;
                 }
                 
 
