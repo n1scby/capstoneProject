@@ -23,7 +23,7 @@ namespace KennelManager.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(_dogRepo.GetDogList("Adopted"));
         }
 
         public IActionResult About()

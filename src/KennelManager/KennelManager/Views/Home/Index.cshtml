@@ -1,25 +1,42 @@
-﻿@{
+﻿
+@model IEnumerable<ApplicationCore.Entities.Dog>
+
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-6">
-    <img src="~/images/fireHydrant.jpg" class="img-responsive"/>
+        <img src="~/images/fireHydrant.jpg" class="img-responsive" />
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-3">
-       
+        <h2>Currrent Dogs</h2>
+        @foreach(var item in Model)
+        {
+
+        <div>
+            <h4>@item.Name</h4>
+            <ul>
+                <li>ID: @item.Id</li>
+                <li>Status: @item.CurrentStatus</li>
+                <li>Location: @item.LocationId</li>
+            </ul>
+        </div>
+
+        }
     </div>
     <div class="col-md-3">
-        
+
     </div>
     <div class="col-md-3">
-        
+
     </div>
     <div class="col-md-3">
-      
+
     </div>
 </div>

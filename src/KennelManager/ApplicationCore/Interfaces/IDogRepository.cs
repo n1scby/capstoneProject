@@ -11,7 +11,7 @@ namespace ApplicationCore.Interfaces
         void Delete(Dog deleteDog);
         Dog GetDogById(int id);
         void Edit(Dog updatedDog);
-        List<Dog> GetDogList();
+        List<Dog> GetDogList(string status);
 
     }
 }

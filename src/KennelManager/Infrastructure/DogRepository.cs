@@ -12,6 +12,7 @@ namespace Infrastructure
         private string _connectionString;
         private string selectDogQuery = "SELECT Id, Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description, CurrentStatus FROM Dog \n";
         private string byId = "WHERE Id = @id";
+        private string byStatus = "WHERE CurrentStatus != @currentStatus";
         private string deleteDogQuery = "DELETE Dog \n";
         private string updateDogQuery = "UPDATE Dog SET Name = @name, Gender = @gender, Altered = @altered, Age = @age, AgeUOM = @ageUOM, Weight = @weight, LocationId = @locationId, MixedBreed = @mixedBreed, PrimaryBreed = @primaryBreed, SecondaryBreed = @secondaryBreed, Description = @description, CurrentStatus = @currentStatus \n";
         private string insertDogQuery = "INSERT into Dog (Name, Gender, Altered, Age, AgeUOM, Weight, LocationId, MixedBreed, PrimaryBreed, SecondaryBreed, Description, CurrentStatus) values(@name, @gender, @altered, @age, @ageUOM, @weight, @locationId, @mixedBreed, @primaryBreed, @secondaryBreed, @description, @currentStatus);" +
@@ -231,13 +232,14 @@ namespace Infrastructure
 
         
 
-        public List<Dog> GetDogList()
+        public List<Dog> GetDogList(string status)
         {
             List<Dog> dogs = new List<Dog>();
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                SqlCommand cmd = new SqlCommand(selectDogQuery, conn);
+                SqlCommand cmd = new SqlCommand(selectDogQuery + byStatus, conn);
+                cmd.Parameters.AddWithValue("@currentStatus", status);
 
                 try
                 {

@@ -35,7 +35,7 @@ namespace KennelManager.Controllers
         // GET: DogManager
         public ActionResult Index()
         {
-            return View(_dogRepo.GetDogList());
+            return View(_dogRepo.GetDogList(" "));
         }
 
         // GET: DogManager/Details/5
