@@ -76,12 +76,38 @@ namespace KennelManager.Controllers
                     BreedCount bc = new BreedCount();
                     bc.BreedName = grp2.Key;
                     bc.Count = grp2.Count();
-                    breedCountList.Add(bc);
+
+                    // look for breed in the list
+                    BreedCount findBreedCount = breedCountList.Find(x => x.BreedName == bc.BreedName);
+                    if (findBreedCount != null)  // if breed is found add to count
+                    {
+                        findBreedCount.Count += bc.Count;
+                    }
+                    else  // not found, then add to list
+                    {
+                        breedCountList.Add(bc);
+                    }
                 }
 
             }
 
-            return View(breedCountList);
+            BreedCount newBC = new BreedCount();
+            newBC.BreedName = "Other";
+            foreach (BreedCount brdCnt in breedCountList.ToList())
+            {
+                if (brdCnt.Count == 1)
+                {
+                    newBC.Count += 1;
+                    breedCountList.Remove(brdCnt);
+                }
+
+            }
+            if (newBC.Count > 0)
+            {
+                breedCountList.Add(newBC);
+            }
+
+            return View(breedCountList.OrderBy(x => x.BreedName));   //order by breedname
         }
 
 
