@@ -1,5 +1,6 @@
 ﻿
-@model IEnumerable<ApplicationCore.Entities.Dog>
+@model KennelManager.Models.HomeViewModels.CurrentDogListViewModel
+
 
 
 @{
@@ -16,17 +17,17 @@
 <div class="row">
     <div class="col-md-4">
         <h2>Currrent Dogs</h2>
-        @foreach(var item in Model)
+        @foreach (var item in Model.CurrentDogs)
         {
 
-        <div>
-            <h4>@item.Name</h4>
-            <ul>
-                <li>ID: @item.Id</li>
-                <li>Status: @item.CurrentStatus</li>
-                <li>Location: @item.LocationId</li>
-            </ul>
-        </div>
+            <div>
+                <h4>@item.Name</h4>
+                <ul>
+                    <li>ID: @item.Id</li>
+                    <li>Status: @item.CurrentStatus</li>
+                    <li>Location: @item.LocationId</li>
+                </ul>
+            </div>
 
         }
     </div>
@@ -36,8 +37,21 @@
     </div>
     <div class="col-md-4">
         <h2>Dogs By Locations</h2>
+        @foreach (var item in Model.LocationList)
+        {
+            <div>
+                <h4>@item.Location</h4>
+                <ul>
+                    @foreach (var dog in item.DogList)
+                    {
+                        <li>@dog.Name</li>
+                    }
+                </ul>
+            </div>
 
-   
+        }
+
+
 
     </div>
 </div>
