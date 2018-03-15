@@ -92,13 +92,13 @@ namespace KennelManager.Controllers
             }
 
             BreedCount newBC = new BreedCount();
-            newBC.BreedName = "Other";
+            newBC.BreedName = "* Other *";
             foreach (BreedCount brdCnt in breedCountList.ToList())
             {
                 if (brdCnt.Count == 1)
                 {
                     newBC.Count += 1;
-                    breedCountList.Remove(brdCnt);
+                 //   breedCountList.Remove(brdCnt);
                 }
 
             }

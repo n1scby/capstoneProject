@@ -4,26 +4,44 @@
     ViewData["Title"] = "DogsByBreed";
 }
 
-<h2>DogsByBreed</h2>
+<h2>Current Dog Breed Count</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BreedName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Count)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+
+
+<div id="breed-data">
+@foreach (var item in Model)
+{
+    if (item.Count > 1 || item.BreedName == "* Other *")
+    {
+    <input type="hidden" id="@item.BreedName" value="@item.Count" />
+    }
+}
+</div>
+
+    <section id="graph-breed-count"></section>
+
+<div>
+    <button id="count-details-button">Show Details</button>
+</div>
+    <table id="breed-count-table" class="table hideSection">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.BreedName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Count)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                if (item.BreedName != "* Other *")
+                {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.BreedName)
@@ -33,18 +51,11 @@
                 </td>
 
             </tr>
-        }
-    </tbody>
-</table>
+                }
+            }
+        </tbody>
+    </table>
 
-<div id="breed-data">
-@foreach (var item in Model)
-{
-    <input type="hidden" id="@item.BreedName" value="@item.Count" />
-}
-</div>
-
-    <div id="graph-breed-count"></div>
 
 
 @section Scripts {
