@@ -63,6 +63,14 @@ namespace KennelManager.Controllers
             return View();
         }
 
+        public IActionResult DisplayDog(int id)
+        {
+                       
+            return View(_dogRepo.GetDogById(id));
+        }
+
+
+
         public IActionResult DogsByBreed()
         {
             List<BreedCount> breedCountList = new List<BreedCount>();

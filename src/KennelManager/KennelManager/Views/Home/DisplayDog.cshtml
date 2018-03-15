@@ -1,0 +1,96 @@
+﻿@model ApplicationCore.Entities.Dog
+@using ApplicationCore.Entities
+
+
+@{
+    ViewData["Title"] = "DisplayDog";
+}
+
+<h2>Display Dog</h2>
+@if (Model.Images == null || Model.Images.Count == 0)
+{
+    <div>
+        <img src="~/images/noPhoto.jpg" />
+    </div>
+
+} else {
+
+@foreach (Image img in Model.Images)
+{
+<div>
+   
+    <img src="~/images/@img.Name"  />
+</div>
+}
+}
+
+<div>
+    <h4>@Html.DisplayFor(model => model.Name)</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>     
+        <dt>
+            @Html.DisplayNameFor(model => model.CurrentStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CurrentStatus)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Gender)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Altered)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Altered)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Weight)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Weight)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LocationId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LocationId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MixedBeed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MixedBeed)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PrimaryBreed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PrimaryBreed)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SecondaryBreed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SecondaryBreed)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

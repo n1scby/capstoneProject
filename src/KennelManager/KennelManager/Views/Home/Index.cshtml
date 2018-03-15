@@ -21,7 +21,9 @@
         {
 
             <div>
-                <h4>@item.Name</h4>
+                <h4>
+                   @Html.ActionLink(item.Name, "DisplayDog", new { id = item.Id }) 
+                </h4>
                 <ul>
                     <li>ID: @item.Id</li>
                     <li>Status: @item.CurrentStatus</li>
@@ -33,7 +35,7 @@
     </div>
     <div class="col-md-4">
         <h2>Reporting Tools</h2>
-        @Html.ActionLink("Current Dogs By Breed", "DogsByBreed") |
+        @Html.ActionLink("Current Dogs By Breed", "DogsByBreed") 
     </div>
     <div class="col-md-4">
         <h2>Dogs By Locations</h2>
@@ -44,7 +46,9 @@
                 <ul>
                     @foreach (var dog in item.DogList)
                     {
-                        <li>@dog.Name</li>
+                    <li>
+                        @Html.ActionLink(dog.Name, "DisplayDog", new { id = dog.Id })
+                    </li>
                     }
                 </ul>
             </div>
