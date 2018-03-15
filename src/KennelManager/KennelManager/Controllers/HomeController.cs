@@ -8,6 +8,7 @@ using KennelManager.Models;
 using ApplicationCore.Interfaces;
 using Microsoft.Extensions.Logging;
 using ApplicationCore.Entities;
+using KennelManager.Models.HomeViewModels;
 
 namespace KennelManager.Controllers
 {
@@ -24,7 +25,28 @@ namespace KennelManager.Controllers
 
         public IActionResult Index()
         {
-            return View(_dogRepo.GetDogList("Adopted"));
+            CurrentDogListViewModel currentDogListVM = new CurrentDogListViewModel();
+            currentDogListVM.CurrentDogs = _dogRepo.GetDogList("Adopted");
+            currentDogListVM.LocationList = new List<DogsByLocation>();
+
+            var results = currentDogListVM.CurrentDogs.GroupBy(
+            d => d.LocationId,
+            d => d.Id, 
+            (key, g) => new { LocationId = key, Dogs = g.ToList() });
+
+            foreach (var loc in results)
+            {
+                DogsByLocation dbl = new DogsByLocation();
+                dbl.DogList = new List<Dog>();
+                dbl.Location = loc.LocationId;
+                foreach (int id in loc.Dogs)
+                {
+                    dbl.DogList.Add(_dogRepo.GetDogById(id));
+                }
+                currentDogListVM.LocationList.Add(dbl);
+            }
+
+            return View(currentDogListVM);
         }
 
         public IActionResult About()
