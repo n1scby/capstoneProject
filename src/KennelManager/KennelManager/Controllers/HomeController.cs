@@ -69,6 +69,41 @@ namespace KennelManager.Controllers
             return View(_dogRepo.GetDogById(id));
         }
 
+        public IActionResult DogStatusHistory(int id)
+        {
+            ViewData["DogName"] = _dogRepo.GetDogById(id).Name;
+            return View(_dogRepo.GetStatusesByDogId(id));
+        }
+
+        public IActionResult MixedPureBreed()
+        {
+            List<Dog> currentDogList = _dogRepo.GetDogList("Adopted");   // all dogs except those adopted
+            int mixedCount = 0;
+            int pureCount = 0;
+
+            foreach(Dog dog in currentDogList)
+            {
+                if (dog.MixedBreed)
+                {
+                    mixedCount++;
+                }
+                else
+                {
+                    pureCount++;
+                }
+            }
+            int totalCount = pureCount + mixedCount;
+            MixedPureBreedViewModel mixedPureVM = new MixedPureBreedViewModel();
+            if (totalCount > 0)
+            {
+                mixedPureVM.MixedPercent = (float)Math.Round(((float)mixedCount / (float)totalCount) * 100, 2);
+                mixedPureVM.PurePercent = (float)Math.Round(((float)pureCount / totalCount) * 100, 2);
+            }
+
+
+            return View(mixedPureVM);
+        }
+
 
 
         public IActionResult DogsByBreed()

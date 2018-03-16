@@ -12,6 +12,7 @@ namespace ApplicationCore.Interfaces
         Dog GetDogById(int id);
         void Edit(Dog updatedDog);
         List<Dog> GetDogList(string status);
+        List<Status> GetStatusesByDogId(int id);
 
     }
 }

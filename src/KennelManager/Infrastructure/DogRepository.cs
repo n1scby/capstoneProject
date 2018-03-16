@@ -55,7 +55,7 @@ namespace Infrastructure
                 cmd.Parameters.AddWithValue("@ageUOM", newDog.DogAge.UOM);
                 cmd.Parameters.AddWithValue("@locationId", newDog.LocationId ?? "");
                 cmd.Parameters.AddWithValue("@weight", newDog.Weight);
-                cmd.Parameters.AddWithValue("@mixedBreed", newDog.MixedBeed);
+                cmd.Parameters.AddWithValue("@mixedBreed", newDog.MixedBreed);
                 cmd.Parameters.AddWithValue("@primaryBreed", newDog.PrimaryBreed);
                 cmd.Parameters.AddWithValue("@secondaryBreed", newDog.SecondaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@description", newDog.Description ?? "");
@@ -140,7 +140,7 @@ namespace Infrastructure
                 cmd.Parameters.AddWithValue("@ageUOM", updatedDog.DogAge.UOM);
                 cmd.Parameters.AddWithValue("@locationId", updatedDog.LocationId ?? "");
                 cmd.Parameters.AddWithValue("@weight", updatedDog.Weight);
-                cmd.Parameters.AddWithValue("@mixedBreed", updatedDog.MixedBeed);
+                cmd.Parameters.AddWithValue("@mixedBreed", updatedDog.MixedBreed);
                 cmd.Parameters.AddWithValue("@primaryBreed", updatedDog.PrimaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@secondaryBreed", updatedDog.SecondaryBreed ?? "");
                 cmd.Parameters.AddWithValue("@description", updatedDog.Description ?? "");
@@ -206,7 +206,7 @@ namespace Infrastructure
                             },
                             Weight = double.Parse(reader[6].ToString()),
                             LocationId = reader[7].ToString(),
-                            MixedBeed = reader.GetBoolean(8),
+                            MixedBreed = reader.GetBoolean(8),
                             PrimaryBreed = reader[9].ToString(),
                             SecondaryBreed = reader[10].ToString(),
                             Description = reader[11].ToString(),
@@ -262,7 +262,7 @@ namespace Infrastructure
                         };
                         dog.Weight = double.Parse(reader[6].ToString());
                         dog.LocationId = reader[7].ToString();
-                        dog.MixedBeed = reader.GetBoolean(8);
+                        dog.MixedBreed = reader.GetBoolean(8);
                         dog.PrimaryBreed = reader[9].ToString();
                         dog.SecondaryBreed = reader[10].ToString();
                         dog.Description = reader[11].ToString();

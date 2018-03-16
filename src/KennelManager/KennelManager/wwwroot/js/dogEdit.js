@@ -4,7 +4,9 @@
     var addColorBtn = document.getElementById("add-color-button");
     var colorCount = document.getElementById("color-count");
     var imageCount = document.getElementById("image-count");
-
+    var mixedCheckBox = document.getElementById("ThisDog_MixedBreed");
+    var secondaryBreedSelect = document.getElementById("ThisDog_SecondaryBreed");
+    
    
     
 
@@ -18,6 +20,15 @@
         ' </select >';
      //   '<button type="button" id="remove-color-btn-{{id}}" class="btn"> - </button>';
 
+
+    mixedCheckBox.addEventListener("click", function () {
+        if (mixedCheckBox.checked) {
+            secondaryBreedSelect.disabled = false;
+        } else {
+            secondaryBreedSelect.disabled = true;
+            secondaryBreedSelect.value = "";
+        }
+    })
 
     addColorBtn.addEventListener("click", function () {
 
@@ -95,6 +106,7 @@
 
     };
 
+    // Preview Image on Upload
     document.getElementById("file-image").onchange = function () {
         var reader = new FileReader();
 
@@ -107,6 +119,12 @@
         reader.readAsDataURL(this.files[0]);
     };
 
+    var initialCheckBox = function initialCheckBox() {
+        if (!mixedCheckBox.checked) {
+            secondaryBreedSelect.disabled = true;
+            secondaryBreedSelect.value = "";
+        }
+    }
 
 
 
@@ -117,6 +135,9 @@
     for (var i = 1; i < imageCount.value; i++) {
         initialImageBtn(i);
     }
+
+    initialCheckBox();
+    
 
 })();
 

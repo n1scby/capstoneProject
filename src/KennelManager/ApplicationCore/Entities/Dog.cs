@@ -21,7 +21,7 @@ namespace ApplicationCore.Entities
         public List<Image> Images { get; set; }
 
         [Display(Name = "Mixed Breed")]
-        public bool MixedBeed { get; set; }
+        public bool MixedBreed { get; set; }
 
         [Display(Name = "Primary Breed")]
         public string PrimaryBreed { get; set; }

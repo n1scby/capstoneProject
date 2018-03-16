@@ -24,10 +24,10 @@
                 <h4>
                    @Html.ActionLink(item.Name, "DisplayDog", new { id = item.Id }) 
                 </h4>
-                <ul>
-                    <li>ID: @item.Id</li>
-                    <li>Status: @item.CurrentStatus</li>
-                    <li>Location: @item.LocationId</li>
+                <ul class="list-group">
+                    <li class="list-group-item">ID: @item.Id</li>
+                    <li class="list-group-item">Status: @Html.ActionLink(item.CurrentStatus, "DogStatusHistory", new { id = item.Id })</li>
+                    <li class="list-group-item">Location: @item.LocationId</li>
                 </ul>
             </div>
 
@@ -36,6 +36,7 @@
     <div class="col-md-4">
         <h2>Reporting Tools</h2>
         @Html.ActionLink("Current Dogs By Breed", "DogsByBreed") 
+        @Html.ActionLink("Mixed vs Pure Breeds", "MixedPureBreed")
     </div>
     <div class="col-md-4">
         <h2>Dogs By Locations</h2>

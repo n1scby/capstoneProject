@@ -1,0 +1,40 @@
+﻿@model KennelManager.Models.HomeViewModels.MixedPureBreedViewModel
+
+@{
+    ViewData["Title"] = "MixedPureBreed";
+}
+
+<h2>MixedPureBreed</h2>
+
+<div>
+    <h4>MixedPureBreedViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MixedPercent)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MixedPercent)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PurePercent)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PurePercent)
+        </dd>
+    </dl>
+</div>
+<div>
+    <input type="hidden" id="mixed-percent" value="@Model.MixedPercent" />
+    <input type="hidden" id="pure-percent" value="@Model.PurePercent" />
+</div>
+<div id="mixed-pie-chart"></div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/plotly-latest.min.js"></script>
+    <script src="~/js/PureMixed.js"></script>
+}
