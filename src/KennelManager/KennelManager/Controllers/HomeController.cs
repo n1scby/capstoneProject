@@ -58,7 +58,7 @@ namespace KennelManager.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "My contact page.";
 
             return View();
         }
