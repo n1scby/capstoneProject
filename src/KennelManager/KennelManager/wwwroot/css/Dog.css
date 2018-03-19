@@ -27,3 +27,20 @@
 .label-adjust{
     padding-right: 1rem;
 }
+
+.color-select {
+    display: inline;
+    width: 80%;
+}
+
+#add-color-button {
+    margin: 1rem;
+}
+
+#upload-image {
+    padding: 1rem;
+}
+
+#dog-save-button {
+    margin: 1rem;
+}

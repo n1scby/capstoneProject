@@ -91,14 +91,20 @@ namespace KennelManager.Controllers
                 {
                     Image newImage = new Image();
                     var filename = Path.Combine(_hostEnv.WebRootPath, "images", Path.GetFileName(pic.FileName));
-                    pic.CopyTo(new FileStream(filename, FileMode.Create));
+                    //pic.CopyTo(new FileStream(filename, FileMode.Create));
+
+                    using (var fileStream = new FileStream(filename, FileMode.Create))
+                    {
+                        pic.CopyTo(fileStream);
+                    }
                     newImage.Name = pic.FileName;
                     newImage.DogId = newDog.ThisDog.Id;
-                    Image noImage = newDog.ThisDog.Images.Find(p => p.Name == "noPhoto.jpg");
-                    if (noImage != null)
-                    {
-                        newDog.ThisDog.Images.Remove(noImage);
-                    }
+                    //Image noImage = newDog.ThisDog.Images.Find(p => p.Name == "noPhoto.jpg");
+                    //if (noImage != null)
+                    //{
+                    //    newDog.ThisDog.Images.Remove(noImage);
+                    //}
+
                     newDog.ThisDog.Images.Add(newImage);
                 }
 
@@ -135,13 +141,13 @@ namespace KennelManager.Controllers
             dogVM.Breeds = new SelectList(_breedRepo.GetBreedList(), "Name", "Name");
             if (dogVM.ThisDog.Images.Count == 0)
             {
-                Image newImage = new Image()
-                {
-                    Name = "noPhoto.jpg",
-                    DogId = dogVM.ThisDog.Id
-                };
+                //Image newImage = new Image()
+                //{
+                //    Name = "noPhoto.jpg",
+                //    DogId = dogVM.ThisDog.Id
+                //};
 
-                dogVM.ThisDog.Images.Add(newImage);
+                //dogVM.ThisDog.Images.Add(newImage);
                
 
             }
@@ -182,23 +188,35 @@ namespace KennelManager.Controllers
                 if (editDog.currentStatus.DogStatus != lastStatus )
                 {
                     editDog.ThisDog.Statuses.Add(editDog.currentStatus);
-                    editDog.ThisDog.CurrentStatus = editDog.currentStatus.DogStatus;
                 }
-                
+
+                editDog.ThisDog.CurrentStatus = editDog.currentStatus.DogStatus;
+
+
 
 
                 if (pic != null)
                 {
                     Image newImage = new Image();
                     var filename = Path.Combine(_hostEnv.WebRootPath, "images", Path.GetFileName(pic.FileName));
-                    pic.CopyTo(new FileStream(filename, FileMode.Create));
+
+                    using(var fileStream = new FileStream(filename, FileMode.Create))
+                    {
+                        pic.CopyTo(fileStream);
+                    }
+
+                  //  pic.CopyTo(new FileStream(filename, FileMode.Create));
                     newImage.Name = pic.FileName;
                     newImage.DogId = editDog.ThisDog.Id;
-                    Image noImage = new Image();
-                    noImage=editDog.ThisDog.Images.Find(p => p.Name == "noPhoto.jpg");
-                    if (noImage != null)
+                    //Image noImage = new Image();
+                    //noImage=editDog.ThisDog.Images.Find(p => p.Name == "noPhoto.jpg");
+                    //if (noImage != null)
+                    //{
+                    //    editDog.ThisDog.Images.Remove(noImage);
+                    //}
+                    if (editDog.ThisDog.Images == null)
                     {
-                        editDog.ThisDog.Images.Remove(noImage);
+                        editDog.ThisDog.Images = new List<Image>();
                     }
                     editDog.ThisDog.Images.Add(newImage);
                 }

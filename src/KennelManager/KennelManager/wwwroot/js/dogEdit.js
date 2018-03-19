@@ -10,7 +10,7 @@
    
     
 
-    var colorTemplate = '<select class="form-control" id="ThisDog.Colors[{{id}}].Name" name="ThisDog.Colors[{{id}}].Name">' +
+    var colorTemplate = '<select class="form-control color-select" id="ThisDog.Colors[{{id}}].Name" name="ThisDog.Colors[{{id}}].Name">' +
         ' <option value=""> --select-- </option>' +
         ' <option value="White">White</option>' +
         ' <option value="Black">Black</option>' +
@@ -40,6 +40,7 @@
         newColorButton.type = "button";
         newColorButton.innerText = " - ";
         newColorButton.classList.add("btn");
+        newColorButton.classList.add("btn-primary");
         newColorButton.id = "remove-color-" + colorCount.value;
         newColorButton.addEventListener("click", function () {
             removeColor(newColorButton);
@@ -132,7 +133,7 @@
         initialColorBtn(i);
     }
 
-    for (var i = 1; i < imageCount.value; i++) {
+    for (var i = 0; i < imageCount.value; i++) {
         initialImageBtn(i);
     }
 

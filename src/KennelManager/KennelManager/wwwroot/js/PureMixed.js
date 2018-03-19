@@ -3,8 +3,7 @@
     var mixedPercent = document.getElementById("mixed-percent");
     var purePercent = document.getElementById("pure-percent");
 
-    alert("hello");
-
+  
     var data = [{
         values: [mixedPercent.value, purePercent.value],
         labels: ['Mixed Breed', 'Pure Breed'],

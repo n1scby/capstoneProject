@@ -7,22 +7,24 @@
 }
 
 <h2>Display Dog</h2>
+<div class="row">
 @if (Model.Images == null || Model.Images.Count == 0)
 {
-    <div>
-        <img src="~/images/noPhoto.jpg" />
+    <div class="col-md-3">
+        <img src="~/images/noPhoto.jpg" class="img-responsive"/>
     </div>
 
 } else {
 
 @foreach (Image img in Model.Images)
 {
-<div>
+<div class="col-md-3">
    
-    <img src="~/images/@img.Name"  />
+    <img src="~/images/@img.Name" class="img-responsive" />
 </div>
 }
 }
+    </div>
 
 <div>
     <h4>@Html.DisplayFor(model => model.Name)</h4>
