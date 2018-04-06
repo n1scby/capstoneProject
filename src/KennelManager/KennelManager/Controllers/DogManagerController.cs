@@ -38,8 +38,35 @@ namespace KennelManager.Controllers
             return View(_dogRepo.GetDogList(" "));
         }
 
-        // GET: DogManager/Details/5
-        public ActionResult Details(int id)
+        // POST: DogManager/Index/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(string searchString, IFormCollection collection)
+        {
+            try
+            {
+                if(searchString != null && searchString != "")
+                {
+                    return View(_dogRepo.GetDogList(" ").Where(x => x.Name.Contains(searchString)));
+                }
+                else
+                {
+                    return View(_dogRepo.GetDogList(" "));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error on Index Search: " + ex.Message);
+
+                return View();
+            }
+        }
+    
+
+
+    // GET: DogManager/Details/5
+    public ActionResult Details(int id)
         {
             return View(_dogRepo.GetDogById(id));
         }
