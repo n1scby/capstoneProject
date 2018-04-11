@@ -32,7 +32,8 @@ namespace KennelManager.Controllers
             var results = currentDogListVM.CurrentDogs.GroupBy(
             d => d.LocationId,
             d => d.Id, 
-            (key, g) => new { LocationId = key, Dogs = g.ToList() });
+            (key, g) => new { LocationId = key, Dogs = g.ToList() })
+            .OrderBy(d => d.LocationId);   
 
             foreach (var loc in results)
             {

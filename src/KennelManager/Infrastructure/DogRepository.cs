@@ -160,19 +160,28 @@ namespace Infrastructure
 
             }
 
-            foreach(Color clr in updatedDog.Colors)
+            if (updatedDog.Colors != null)
             {
-                UpdateColor(clr, updatedDog.Id);
+                foreach (Color clr in updatedDog.Colors)
+                {
+                    UpdateColor(clr, updatedDog.Id);
+                }
             }
 
-            foreach (Status sts in updatedDog.Statuses)
+            if (updatedDog.Statuses != null)
             {
-                UpdateStatus(sts, updatedDog.Id);
+                foreach (Status sts in updatedDog.Statuses)
+                {
+                    UpdateStatus(sts, updatedDog.Id);
+                }
             }
 
-            foreach (Image img in updatedDog.Images)
+            if (updatedDog.Images != null)
             {
-                UpdateImage(img, updatedDog.Id);
+                foreach (Image img in updatedDog.Images)
+                {
+                    UpdateImage(img, updatedDog.Id);
+                }
             }
 
         }
